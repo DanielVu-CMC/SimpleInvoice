@@ -4,32 +4,31 @@ A responsive React/TypeScript and NestJS/TypeScript invoice application backed b
 
 A [short reviewer demo](docs/demo/index.html) shows exact decimal totals, concurrent duplicate-number protection, and derived Overdue filtering. See the [walkthrough and evidence](docs/DEMO.md) for the reproducible checks.
 
-The specification is [Assessment_Fullstack_v3.0.0.md](Assessment_Fullstack_v3.0.0.md). Its document version is v2.3.1, despite the source filename.
+The specification is [Assessment_Fullstack_v3.0.0.md](requirements/Assessment_Fullstack_v3.0.0.md). Its document version is v2.3.1, despite the source filename.
 
 ## Run with Docker
 
-Requirements: Docker Engine with Docker Compose, or a compatible runtime such as OrbStack or Colima. No application dependencies need to be installed locally for Docker use. Node.js 24 is recommended for the optional setup command.
+Requirements: Docker Engine with Docker Compose, or a compatible runtime such as OrbStack or Colima. No application dependencies need to be installed locally for Docker use. Node.js 24 is required for the startup helper.
 
 ```sh
-# Generate a local .env from .env.example, including random database/JWT secrets.
-npm run setup
-
-# Build and start the frontend, backend, and database. Migrations and seeds run automatically.
-docker compose up --build
+# Generate configuration, build, seed, and wait for all services to be healthy.
+npm start
 ```
+
+`npm start` works before installing npm dependencies and preserves an existing `.env`. Docker must be running and the configured ports must be available. It starts services in the background and waits for health checks.
 
 Once images are built, `docker compose up` starts the entire stack. The legacy `docker-compose up` command also works when installed. Configuration must exist before starting; alternatively copy `.env.example` to `.env` and replace the database password in both `DATABASE_PASSWORD` and `DATABASE_URL`, plus `JWT_SECRET` with a random value of at least 32 characters.
 
 | Service        | Default URL / port                  |
 | -------------- | ----------------------------------- |
-| Frontend       | http://localhost:5173               |
+| Frontend       | http://localhost:5180               |
 | Backend        | http://localhost:3001               |
 | Swagger UI     | http://localhost:3001/api/docs      |
 | OpenAPI JSON   | http://localhost:3001/api/docs-json |
 | Database       | localhost:5432                      |
 | Backend health | http://localhost:3001/health        |
 
-Ports are bound to localhost. In this workspace, the local `.env` uses port **5180** and `CORS_ORIGIN=http://localhost:5180` because another project occupies 5173. Change `FRONTEND_PORT`, `APP_PORT`, or `DATABASE_PORT` in `.env` as needed. If changing the frontend port, update `CORS_ORIGIN` too. The frontend proxies `/api/*` to the backend; the backend exposes the exact assessment routes without a version or API prefix. Each service has its own Dockerfile. PostgreSQL data persists in the `invoice-data` named volume.
+Ports are bound to localhost. The default frontend port is **5180**, with `CORS_ORIGIN=http://localhost:5180`. Change `FRONTEND_PORT`, `APP_PORT`, or `DATABASE_PORT` in `.env` as needed. If changing the frontend port, update `CORS_ORIGIN` too. The frontend proxies `/api/*` to the backend; the backend exposes the exact assessment routes without a version or API prefix. Each service has its own Dockerfile. PostgreSQL data persists in the `invoice-data` named volume.
 
 ```sh
 # Run in the background and wait for all health checks.

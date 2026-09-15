@@ -1,0 +1,2841 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SimpleInvoice · Take-home assessment checklist</title>
+    <style>
+      :root {
+        --ink: #20312b;
+        --green: #23664b;
+        --cream: #f5f3eb;
+        --line: #d9ded4;
+        --muted: #66716b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--cream);
+        color: var(--ink);
+        font:
+          16px/1.6 system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      main {
+        max-width: 1140px;
+        margin: auto;
+        padding: 48px 24px;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 28px;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 12px;
+        font-weight: 750;
+        color: var(--green);
+      }
+      h1 {
+        font-size: clamp(32px, 5vw, 54px);
+        line-height: 1.1;
+        margin: 14px 0;
+      }
+      h2 {
+        font-size: 25px;
+        line-height: 1.3;
+        margin-top: 38px;
+      }
+      h3 {
+        font-size: 17px;
+        margin: 7px 0;
+      }
+      p {
+        margin: 8px 0;
+      }
+      .intro {
+        max-width: 850px;
+        color: var(--muted);
+      }
+      a {
+        color: var(--green);
+        text-underline-offset: 3px;
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin: 25px 0;
+      }
+      .metric,
+      .panel {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px;
+      }
+      .metric strong {
+        display: block;
+        font-size: 30px;
+      }
+      .metric span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .note {
+        border-left: 4px solid #ac8136;
+        padding: 12px 18px;
+        background: #fff9e9;
+        font-size: 14px;
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: end;
+        background: #e9eee5;
+        padding: 16px;
+        border-radius: 12px;
+      }
+      .toolbar label {
+        display: flex;
+        flex-direction: column;
+        font-size: 13px;
+        font-weight: 650;
+        gap: 5px;
+      }
+      input[type='search'],
+      select,
+      button {
+        font: inherit;
+        padding: 9px 12px;
+        border: 1px solid #bfc9bc;
+        border-radius: 7px;
+        background: white;
+        color: var(--ink);
+      }
+      input[type='search'] {
+        width: min(100%, 340px);
+      }
+      button {
+        cursor: pointer;
+      }
+      button:hover {
+        background: #f1f5ee;
+      }
+      .counter {
+        font-size: 14px;
+        color: var(--muted);
+        margin: 12px 0;
+      }
+      .check-row {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 12px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .review-check {
+        width: 19px;
+        height: 19px;
+        margin: 5px 0;
+        accent-color: var(--green);
+      }
+      .row-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 9px;
+      }
+      .reference,
+      .category {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .badge {
+        font-size: 11px;
+        font-weight: 800;
+        border-radius: 20px;
+        padding: 2px 9px;
+      }
+      .met {
+        background: #dceee3;
+        color: #185a37;
+      }
+      .partial {
+        background: #fff0c8;
+        color: #805611;
+      }
+      .pending {
+        background: #e8eaf3;
+        color: #4a527d;
+      }
+      .check-row p {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      details {
+        font-size: 13px;
+      }
+      summary {
+        cursor: pointer;
+        color: var(--green);
+      }
+      .evidence {
+        display: flex;
+        flex-direction: column;
+        overflow-wrap: anywhere;
+        margin: 8px 0;
+      }
+      .priority {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 15px;
+        border-bottom: 1px solid var(--line);
+        padding: 20px 0;
+      }
+      .priority:last-child {
+        border: 0;
+      }
+      .rank {
+        color: var(--green);
+        font-weight: 800;
+        font-size: 13px;
+      }
+      .priority p {
+        font-size: 15px;
+      }
+      .small {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .gallery {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .gallery img {
+        width: 100%;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th,
+      td {
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+        padding: 12px;
+        vertical-align: top;
+      }
+      footer {
+        margin-top: 40px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid #d49835;
+        outline-offset: 3px;
+      }
+      @media (max-width: 650px) {
+        main {
+          padding: 25px 16px;
+        }
+        .metrics {
+          grid-template-columns: 1fr 1fr;
+        }
+        .priority {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+        .gallery {
+          grid-template-columns: 1fr;
+        }
+        .toolbar label {
+          width: 100%;
+        }
+        input[type='search'] {
+          width: 100%;
+        }
+        th,
+        td {
+          padding: 8px;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        main {
+          padding: 0;
+          max-width: none;
+        }
+        .toolbar,
+        .actions {
+          display: none;
+        }
+        .check-row {
+          break-inside: avoid;
+        }
+        details {
+          display: block;
+        }
+        .panel,
+        .metric {
+          border-radius: 0;
+        }
+        h2 {
+          break-after: avoid;
+        }
+        .gallery {
+          display: none;
+        }
+        .note {
+          background: white;
+        }
+        .check-row[hidden] {
+          display: grid !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">SimpleInvoice / submission review</div>
+        <h1>A strong implementation.<br />A few finishing moves.</h1>
+        <p class="intro">
+          Requirement-by-requirement assessment against
+          <a href="Assessment_Fullstack_v3.0.0.md"
+            >the original assessment transcription</a
+          >, based on source inspection and verification evidence. Filename
+          v3.0.0; the original document identifies itself as v2.3.1.
+        </p>
+        <p class="small">
+          Assessment date: 16 September 2026 · Internal candidate review, not an
+          employer grade.
+        </p>
+      </header>
+      <div class="metrics">
+        <div class="metric">
+          <strong>97.3%</strong><span>Checklist fulfillment proxy</span>
+        </div>
+        <div class="metric">
+          <strong>54/56</strong><span>Requirements assessed as met</span>
+        </div>
+        <div class="metric">
+          <strong>1 partial</strong><span>Packaging / submission gaps</span>
+        </div>
+        <div class="metric">
+          <strong>1 pending</strong><span>Administrative delivery</span>
+        </div>
+      </div>
+      <div class="note">
+        Scoring method: met = 1, partial = 0.5, pending = 0; each of the 56
+        consolidated checklist entries has equal weight. Repeated wording in the
+        specification is consolidated. This is a transparent tracking measure,
+        not an official weighted rubric or test-coverage percentage. All four
+        requested application features are implemented; packaging and delivery
+        keep this below 100%.
+      </div>
+      <h2>Assessment verdict</h2>
+      <div class="panel">
+        <p>
+          <strong
+            >Very close to the original requirements, with no core feature gap
+            found in this review.</strong
+          >
+          Authentication, listing, details and one-item creation match the
+          requested stack and behavior. The strongest evidence is real
+          PostgreSQL integration testing of monetary precision, duplicate-number
+          races and derived status filtering, backed by React flow tests and
+          actual browser workflows.
+        </p>
+        <p>
+          The implementation already adds useful restraint and polish: HttpOnly
+          JWT cookies, session-expiry handling, explicit migrations, idempotent
+          seeding, literal search, stable pagination, exact money formatting,
+          accessible labels and a printable detail page. Do not obscure these
+          strengths by adding several unfinished product features.
+        </p>
+        <p>
+          <strong>Remaining issues:</strong> source is now committed locally,
+          but publication remains unverified, the GitHub remote is reachable but
+          the implementation has not been verified there, and the candidate
+          email/deadline are unknown. The README typo has been corrected. CI
+          remains an optional improvement and was not selected for
+          implementation.
+        </p>
+      </div>
+      <div class="panel">
+        <h2>Selected improvements delivered · 16 September</h2>
+        <ul>
+          <li>
+            <strong>URL-backed register:</strong> validated search, status,
+            dates, sort and pagination survive refresh, browser history and
+            detail/back links, including a pending search.
+          </li>
+          <li>
+            <strong>Keyboard/accessibility:</strong> keyboard-only core
+            workflow, route focus, linked field errors, mobile focus containment
+            and Escape/restore, stronger text contrast and reduced-motion
+            support. Eight browser tests pass, including axe scans.
+          </li>
+          <li>
+            <strong>Reviewer demo:</strong>
+            <a href="../docs/demo/index.html"
+              >Open the short captioned recording</a
+            >
+            and <a href="../docs/DEMO.md">technical walkthrough</a>. The
+            recorder verifies exact decimal totals, concurrent 201/409 responses
+            and stored Pending → returned Overdue.
+          </li>
+        </ul>
+      </div>
+      <h2>Requirement checklist</h2>
+      <p class="small">
+        Status badges are the assessment findings. Checkboxes are your personal
+        review marks and do not change the score. Marks persist in this browser
+        when storage is available. Evidence links open source files; use your
+        IDE for comfortable code reading.
+      </p>
+      <div class="toolbar">
+        <label
+          >Search requirements<input
+            id="search"
+            type="search"
+            placeholder="Try: overdue, seed, JWT…" /></label
+        ><label
+          >Finding<select id="status">
+            <option value="all">All findings</option>
+            <option value="met">Met</option>
+            <option value="partial">Partial</option>
+            <option value="pending">Pending</option>
+          </select></label
+        ><label
+          >Area<select id="section">
+            <option value="all">All areas</option>
+            <option>Authentication</option>
+            <option>Invoice list</option>
+            <option>Invoice detail</option>
+            <option>Invoice creation</option>
+            <option>Frontend</option>
+            <option>Backend / API</option>
+            <option>Business logic / data</option>
+            <option>Seeding</option>
+            <option>Validation / errors</option>
+            <option>Testing / API docs</option>
+            <option>Packaging / configuration</option>
+            <option>Submission / README</option>
+          </select></label
+        ><button id="reset" type="button">Reset review marks</button
+        ><button id="print" type="button">Print / save PDF</button>
+      </div>
+      <p id="counter" class="counter" role="status" aria-live="polite"></p>
+      <div id="checklist">
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Authentication"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r0"
+            aria-label="Personally reviewed: Login screen with email and password"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Authentication</span>
+            </div>
+            <h3>
+              <label for="r0">Login screen with email and password</label>
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/auth/login-page.tsx"
+                  >frontend/src/features/auth/login-page.tsx</a
+                >
+                <a href="../frontend/src/app.test.tsx"
+                  >frontend/src/app.test.tsx</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Authentication"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r1"
+            aria-label="Personally reviewed: Client-side and server-side authentication validation"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Authentication</span>
+            </div>
+            <h3>
+              <label for="r1"
+                >Client-side and server-side authentication validation</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/auth/login-page.tsx"
+                  >frontend/src/features/auth/login-page.tsx</a
+                >
+                <a href="../backend/src/auth/auth.dto.ts"
+                  >backend/src/auth/auth.dto.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Authentication"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r2"
+            aria-label="Personally reviewed: Issue JWT and securely store it on the client"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Authentication</span>
+            </div>
+            <h3>
+              <label for="r2"
+                >Issue JWT and securely store it on the client</label
+              >
+            </h3>
+            <p>
+              Browser-managed HttpOnly, SameSite=Strict cookie; Secure is
+              environment-controlled. Login also returns the JWT for API
+              clients.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/auth/auth.controller.ts"
+                  >backend/src/auth/auth.controller.ts</a
+                >
+                <a href="../frontend/src/services/auth/auth-provider.tsx"
+                  >frontend/src/services/auth/auth-provider.tsx</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Authentication"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r3"
+            aria-label="Personally reviewed: Protect UI routes, redirect unauthenticated users, guard invoice APIs"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.1 / 2.3.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Authentication</span>
+            </div>
+            <h3>
+              <label for="r3"
+                >Protect UI routes, redirect unauthenticated users, guard
+                invoice APIs</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/app.tsx">frontend/src/app.tsx</a>
+                <a href="../backend/src/invoices/invoices.controller.ts"
+                  >backend/src/invoices/invoices.controller.ts</a
+                >
+                <a href="../backend/src/auth/jwt-auth.guard.ts"
+                  >backend/src/auth/jwt-auth.guard.ts</a
+                >
+                <a href="tests/browser/invoices.spec.ts"
+                  >tests/browser/invoices.spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Authentication"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r4"
+            aria-label="Personally reviewed: Configurable JWT expiration, default 3,600 seconds"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Authentication</span>
+            </div>
+            <h3>
+              <label for="r4"
+                >Configurable JWT expiration, default 3,600 seconds</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/config/environment.ts"
+                  >backend/src/config/environment.ts</a
+                >
+                <a href="../backend/src/config/environment.spec.ts"
+                  >backend/src/config/environment.spec.ts</a
+                >
+                <a href="../backend/src/auth/auth.module.ts"
+                  >backend/src/auth/auth.module.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Authentication"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r5"
+            aria-label="Personally reviewed: Seed reviewer account and document credentials"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Authentication</span>
+            </div>
+            <h3>
+              <label for="r5"
+                >Seed reviewer account and document credentials</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/database/seed/seed.ts"
+                  >backend/src/database/seed/seed.ts</a
+                >
+                <a href="../README.md">README.md</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice list"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r6"
+            aria-label="Personally reviewed: Invoice list is the landing page after login"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice list</span>
+            </div>
+            <h3>
+              <label for="r6"
+                >Invoice list is the landing page after login</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/auth/login-page.tsx"
+                  >frontend/src/features/auth/login-page.tsx</a
+                >
+                <a href="../frontend/src/app.test.tsx"
+                  >frontend/src/app.test.tsx</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice list"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r7"
+            aria-label="Personally reviewed: Show number, customer, invoice date, due date, total and status"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice list</span>
+            </div>
+            <h3>
+              <label for="r7"
+                >Show number, customer, invoice date, due date, total and
+                status</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/list-page.tsx"
+                  >frontend/src/features/invoices/list-page.tsx</a
+                >
+                <a href="tests/browser/invoices.spec.ts"
+                  >tests/browser/invoices.spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice list"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r8"
+            aria-label="Personally reviewed: Case-insensitive partial search by number or customer"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice list</span>
+            </div>
+            <h3>
+              <label for="r8"
+                >Case-insensitive partial search by number or customer</label
+              >
+            </h3>
+            <p>
+              SQL parameters and escaped LIKE wildcards preserve literal partial
+              matching.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a
+                  href="../backend/src/invoices/infrastructure/invoices.repository.ts"
+                  >backend/src/invoices/infrastructure/invoices.repository.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice list"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r9"
+            aria-label="Personally reviewed: Filter Draft, Pending, Paid and Overdue"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice list</span>
+            </div>
+            <h3>
+              <label for="r9">Filter Draft, Pending, Paid and Overdue</label>
+            </h3>
+            <p>
+              Filters apply derived status before pagination, including expired
+              Draft invoices.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a
+                  href="../backend/src/invoices/infrastructure/invoices.repository.ts"
+                  >backend/src/invoices/infrastructure/invoices.repository.ts</a
+                >
+                <a href="../frontend/src/features/invoices/list-page.tsx"
+                  >frontend/src/features/invoices/list-page.tsx</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice list"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r10"
+            aria-label="Personally reviewed: Sort invoiceDate, dueDate and totalAmount in both directions"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice list</span>
+            </div>
+            <h3>
+              <label for="r10"
+                >Sort invoiceDate, dueDate and totalAmount in both
+                directions</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/dto/list-invoices.dto.ts"
+                  >backend/src/invoices/dto/list-invoices.dto.ts</a
+                >
+                <a
+                  href="../backend/src/invoices/infrastructure/invoices.repository.ts"
+                  >backend/src/invoices/infrastructure/invoices.repository.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice list"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r11"
+            aria-label="Personally reviewed: Server-side pagination with configurable page size"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice list</span>
+            </div>
+            <h3>
+              <label for="r11"
+                >Server-side pagination with configurable page size</label
+              >
+            </h3>
+            <p>Default 10; maximum 100; stable UUID tie-breaker.</p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a
+                  href="../backend/src/invoices/infrastructure/invoices.repository.ts"
+                  >backend/src/invoices/infrastructure/invoices.repository.ts</a
+                >
+                <a href="../frontend/src/features/invoices/list-page.tsx"
+                  >frontend/src/features/invoices/list-page.tsx</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice detail"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r12"
+            aria-label="Personally reviewed: Select a listed invoice to open its details"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice detail</span>
+            </div>
+            <h3>
+              <label for="r12"
+                >Select a listed invoice to open its details</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/list-page.tsx"
+                  >frontend/src/features/invoices/list-page.tsx</a
+                >
+                <a href="../frontend/src/features/invoices/detail-page.tsx"
+                  >frontend/src/features/invoices/detail-page.tsx</a
+                >
+                <a href="tests/browser/invoices.spec.ts"
+                  >tests/browser/invoices.spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice detail"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r13"
+            aria-label="Personally reviewed: Display invoice, customer and line-item information"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice detail</span>
+            </div>
+            <h3>
+              <label for="r13"
+                >Display invoice, customer and line-item information</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/detail-page.tsx"
+                  >frontend/src/features/invoices/detail-page.tsx</a
+                >
+                <a href="../backend/src/invoices/dto/invoice-response.dto.ts"
+                  >backend/src/invoices/dto/invoice-response.dto.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice detail"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r14"
+            aria-label="Personally reviewed: Display subtotal, tax, discount, total, outstanding balance and status accurately"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice detail</span>
+            </div>
+            <h3>
+              <label for="r14"
+                >Display subtotal, tax, discount, total, outstanding balance and
+                status accurately</label
+              >
+            </h3>
+            <p>
+              Server decimal strings are displayed with exact cents; amount paid
+              is also shown.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/detail-page.tsx"
+                  >frontend/src/features/invoices/detail-page.tsx</a
+                >
+                <a href="../frontend/src/features/invoices/format.test.ts"
+                  >frontend/src/features/invoices/format.test.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r15"
+            aria-label="Personally reviewed: Create form and exactly one line item"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r15">Create form and exactly one line item</label>
+            </h3>
+            <p>
+              Request accepts one item object; separate item table permits
+              future expansion.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/create-page.tsx"
+                  >frontend/src/features/invoices/create-page.tsx</a
+                >
+                <a href="../backend/src/invoices/dto/create-invoice.dto.ts"
+                  >backend/src/invoices/dto/create-invoice.dto.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r16"
+            aria-label="Personally reviewed: Persist new invoices as Draft"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3><label for="r16">Persist new invoices as Draft</label></h3>
+            <p>
+              A past-due Draft is correctly returned as derived Overdue. This
+              follows the explicit read-time rule.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/invoices.service.ts"
+                  >backend/src/invoices/invoices.service.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r17"
+            aria-label="Personally reviewed: User-provided, unique invoice number"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r17">User-provided, unique invoice number</label>
+            </h3>
+            <p>
+              Unique constraint protects concurrent requests; duplicates return
+              409.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a
+                  href="../backend/src/database/migrations/1760000000000-initial-schema.ts"
+                  >backend/src/database/migrations/1760000000000-initial-schema.ts</a
+                >
+                <a href="../backend/src/invoices/invoices.service.ts"
+                  >backend/src/invoices/invoices.service.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r18"
+            aria-label="Personally reviewed: Required non-empty customer name and valid customer email"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r18"
+                >Required non-empty customer name and valid customer
+                email</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/create-schema.ts"
+                  >frontend/src/features/invoices/create-schema.ts</a
+                >
+                <a href="../backend/src/invoices/dto/create-invoice.dto.ts"
+                  >backend/src/invoices/dto/create-invoice.dto.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r19"
+            aria-label="Personally reviewed: Optional customer mobile and address"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r19">Optional customer mobile and address</label>
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/create-page.tsx"
+                  >frontend/src/features/invoices/create-page.tsx</a
+                >
+                <a href="../backend/src/invoices/dto/create-invoice.dto.ts"
+                  >backend/src/invoices/dto/create-invoice.dto.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r20"
+            aria-label="Personally reviewed: Valid invoice date and due date on or after invoice date"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r20"
+                >Valid invoice date and due date on or after invoice date</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/create-schema.ts"
+                  >frontend/src/features/invoices/create-schema.ts</a
+                >
+                <a href="../backend/src/common/date.validators.ts"
+                  >backend/src/common/date.validators.ts</a
+                >
+                <a href="../backend/src/invoices/dto/create-invoice.dto.spec.ts"
+                  >backend/src/invoices/dto/create-invoice.dto.spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r21"
+            aria-label="Personally reviewed: Required currency, item name, positive integer quantity and positive rate"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r21"
+                >Required currency, item name, positive integer quantity and
+                positive rate</label
+              >
+            </h3>
+            <p>
+              Backend validates ISO currency; precision and size limits are
+              documented.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/create-schema.ts"
+                  >frontend/src/features/invoices/create-schema.ts</a
+                >
+                <a href="../backend/src/invoices/dto/create-invoice.dto.ts"
+                  >backend/src/invoices/dto/create-invoice.dto.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r22"
+            aria-label="Personally reviewed: Non-negative tax default 10%; optional discount default 0"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r22"
+                >Non-negative tax default 10%; optional discount default
+                0</label
+              >
+            </h3>
+            <p>
+              Omission and blank UI values use defaults; invalid negative values
+              fail validation.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a
+                  href="../frontend/src/features/invoices/create-schema.test.ts"
+                  >frontend/src/features/invoices/create-schema.test.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+                <a href="tests/browser/invoices.spec.ts"
+                  >tests/browser/invoices.spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r23"
+            aria-label="Personally reviewed: Success notification and redirect to list"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r23">Success notification and redirect to list</label>
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices/create-page.tsx"
+                  >frontend/src/features/invoices/create-page.tsx</a
+                >
+                <a href="../frontend/src/app.test.tsx"
+                  >frontend/src/app.test.tsx</a
+                >
+                <a href="tests/browser/invoices.spec.ts"
+                  >tests/browser/invoices.spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Invoice creation"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r24"
+            aria-label="Personally reviewed: Calculate totals exclusively on backend using required formulas"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.1.4 / 2.3.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Invoice creation</span>
+            </div>
+            <h3>
+              <label for="r24"
+                >Calculate totals exclusively on backend using required
+                formulas</label
+              >
+            </h3>
+            <p>
+              Decimal arithmetic; explicit half-up cent rounding. No frontend
+              total calculation.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/domain/invoice.logic.ts"
+                  >backend/src/invoices/domain/invoice.logic.ts</a
+                >
+                <a href="../backend/src/invoices/domain/invoice.logic.spec.ts"
+                  >backend/src/invoices/domain/invoice.logic.spec.ts</a
+                >
+                <a href="../frontend/src/features/invoices/create-page.tsx"
+                  >frontend/src/features/invoices/create-page.tsx</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article class="check-row" data-status="met" data-section="Frontend">
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r25"
+            aria-label="Personally reviewed: ReactJS and TypeScript"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Frontend</span>
+            </div>
+            <h3><label for="r25">ReactJS and TypeScript</label></h3>
+            <p>
+              Vite and React Router replace Next.js as authorized; template
+              provenance is documented.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/package.json">frontend/package.json</a>
+                <a href="../frontend/src/main.tsx">frontend/src/main.tsx</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article class="check-row" data-status="met" data-section="Frontend">
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r26"
+            aria-label="Personally reviewed: Responsive desktop and mobile layouts"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Frontend</span>
+            </div>
+            <h3>
+              <label for="r26">Responsive desktop and mobile layouts</label>
+            </h3>
+            <p>
+              Prior browser verification at 390px; screenshots cover all four
+              screens. Not a full device matrix.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/styles.css">frontend/src/styles.css</a>
+                <a href="tests/browser/invoices.spec.ts"
+                  >tests/browser/invoices.spec.ts</a
+                >
+                <a href="../docs/screenshots/invoices-mobile.png"
+                  >docs/screenshots/invoices-mobile.png</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article class="check-row" data-status="met" data-section="Frontend">
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r27"
+            aria-label="Personally reviewed: Maintainable code and adequate documentation"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Frontend</span>
+            </div>
+            <h3>
+              <label for="r27"
+                >Maintainable code and adequate documentation</label
+              >
+            </h3>
+            <p>
+              Feature separation and typed API client support readability;
+              maintainability remains a qualitative judgement.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/features/invoices"
+                  >frontend/src/features/invoices</a
+                >
+                <a href="../frontend/src/services">frontend/src/services</a>
+                <a href="../README.md">README.md</a>
+                <a href="../docs/BOILERPLATES.md">docs/BOILERPLATES.md</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article class="check-row" data-status="met" data-section="Frontend">
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r28"
+            aria-label="Personally reviewed: Mandatory unit tests for critical flows and components"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Frontend</span>
+            </div>
+            <h3>
+              <label for="r28"
+                >Mandatory unit tests for critical flows and components</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../frontend/src/app.test.tsx"
+                  >frontend/src/app.test.tsx</a
+                >
+                <a
+                  href="../frontend/src/features/invoices/create-schema.test.ts"
+                  >frontend/src/features/invoices/create-schema.test.ts</a
+                >
+                <a href="../frontend/src/features/invoices/format.test.ts"
+                  >frontend/src/features/invoices/format.test.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Backend / API"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r29"
+            aria-label="Personally reviewed: NestJS, TypeScript, REST API and relational persistence"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Backend / API</span>
+            </div>
+            <h3>
+              <label for="r29"
+                >NestJS, TypeScript, REST API and relational persistence</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/package.json">backend/package.json</a>
+                <a href="../backend/src/app.module.ts"
+                  >backend/src/app.module.ts</a
+                >
+                <a href="../backend/src/database/typeorm-config.service.ts"
+                  >backend/src/database/typeorm-config.service.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Backend / API"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r30"
+            aria-label="Personally reviewed: POST /auth/login and GET /auth/me"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Backend / API</span>
+            </div>
+            <h3><label for="r30">POST /auth/login and GET /auth/me</label></h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/auth/auth.controller.ts"
+                  >backend/src/auth/auth.controller.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Backend / API"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r31"
+            aria-label="Personally reviewed: GET /invoices, GET /invoices/:id and POST /invoices"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Backend / API</span>
+            </div>
+            <h3>
+              <label for="r31"
+                >GET /invoices, GET /invoices/:id and POST /invoices</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/invoices.controller.ts"
+                  >backend/src/invoices/invoices.controller.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Backend / API"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r32"
+            aria-label="Personally reviewed: Support all eight specified query parameters"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Backend / API</span>
+            </div>
+            <h3>
+              <label for="r32"
+                >Support all eight specified query parameters</label
+              >
+            </h3>
+            <p>
+              page, pageSize, sortBy, ordering, status, keyword, fromDate and
+              toDate; date bounds are inclusive invoiceDate filters.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/dto/list-invoices.dto.ts"
+                  >backend/src/invoices/dto/list-invoices.dto.ts</a
+                >
+                <a
+                  href="../backend/src/invoices/infrastructure/invoices.repository.ts"
+                  >backend/src/invoices/infrastructure/invoices.repository.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Backend / API"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r33"
+            aria-label="Personally reviewed: List response shape: data and paging.page/pageSize/total"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Backend / API</span>
+            </div>
+            <h3>
+              <label for="r33"
+                >List response shape: data and paging.page/pageSize/total</label
+              >
+            </h3>
+            <p>
+              Uses the normative endpoint shape, rather than Appendix A legacy
+              paging keys.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/dto/invoice-response.dto.ts"
+                  >backend/src/invoices/dto/invoice-response.dto.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Business logic / data"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r34"
+            aria-label="Personally reviewed: Due-date ordering validated server-side"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Business logic / data</span>
+            </div>
+            <h3>
+              <label for="r34">Due-date ordering validated server-side</label>
+            </h3>
+            <p>DTO/service validation and database constraint.</p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/common/date.validators.ts"
+                  >backend/src/common/date.validators.ts</a
+                >
+                <a href="../backend/src/invoices/invoices.service.ts"
+                  >backend/src/invoices/invoices.service.ts</a
+                >
+                <a
+                  href="../backend/src/database/migrations/1760000000000-initial-schema.ts"
+                  >backend/src/database/migrations/1760000000000-initial-schema.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Business logic / data"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r35"
+            aria-label="Personally reviewed: Derive Overdue on reads; never persist it; Paid remains Paid"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Business logic / data</span>
+            </div>
+            <h3>
+              <label for="r35"
+                >Derive Overdue on reads; never persist it; Paid remains
+                Paid</label
+              >
+            </h3>
+            <p>
+              UTC defines today and is documented. Database enum/check allows
+              only Draft, Pending and Paid.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/domain/invoice.logic.ts"
+                  >backend/src/invoices/domain/invoice.logic.ts</a
+                >
+                <a
+                  href="../backend/src/invoices/infrastructure/invoices.repository.ts"
+                  >backend/src/invoices/infrastructure/invoices.repository.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Business logic / data"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r36"
+            aria-label="Personally reviewed: Sensible Invoice, embedded Customer, Item and User model"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 3.1–3.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Business logic / data</span>
+            </div>
+            <h3>
+              <label for="r36"
+                >Sensible Invoice, embedded Customer, Item and User model</label
+              >
+            </h3>
+            <p>
+              UUIDs, foreign keys, bcrypt hash, numeric money, customer
+              snapshot, creation metadata and indexes.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a
+                  href="../backend/src/invoices/infrastructure/invoice.entity.ts"
+                  >backend/src/invoices/infrastructure/invoice.entity.ts</a
+                >
+                <a
+                  href="../backend/src/invoices/infrastructure/invoice-item.entity.ts"
+                  >backend/src/invoices/infrastructure/invoice-item.entity.ts</a
+                >
+                <a href="../backend/src/users/user.entity.ts"
+                  >backend/src/users/user.entity.ts</a
+                >
+                <a href="../README.md">README.md</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article class="check-row" data-status="met" data-section="Seeding">
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r37"
+            aria-label="Personally reviewed: Use Appendix A as foundation"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.4 / Appendix A</span
+              ><span class="badge met">MET</span
+              ><span class="category">Seeding</span>
+            </div>
+            <h3><label for="r37">Use Appendix A as foundation</label></h3>
+            <p>
+              Paul invoice and payment values preserved; mock Overdue maps to
+              stored Pending. Legacy non-model fields omitted and explained.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/database/seed/seed.ts"
+                  >backend/src/database/seed/seed.ts</a
+                >
+                <a href="../README.md">README.md</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article class="check-row" data-status="met" data-section="Seeding">
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r38"
+            aria-label="Personally reviewed: Generate approximately 20–50 varied additional records"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Seeding</span>
+            </div>
+            <h3>
+              <label for="r38"
+                >Generate approximately 20–50 varied additional records</label
+              >
+            </h3>
+            <p>
+              40 additional records; varied customers, dates, amounts and
+              persisted statuses.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/database/seed/seed.ts"
+                  >backend/src/database/seed/seed.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article class="check-row" data-status="met" data-section="Seeding">
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r39"
+            aria-label="Personally reviewed: Single npm run seed command"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.4</span
+              ><span class="badge met">MET</span
+              ><span class="category">Seeding</span>
+            </div>
+            <h3><label for="r39">Single npm run seed command</label></h3>
+            <p>
+              Also applies migrations; host and container paths documented;
+              idempotent behavior tested.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="package.json">package.json</a>
+                <a href="../backend/package.json">backend/package.json</a>
+                <a href="../backend/scripts/run-seed.cjs"
+                  >backend/scripts/run-seed.cjs</a
+                >
+                <a href="../README.md">README.md</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Validation / errors"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r40"
+            aria-label="Personally reviewed: class-validator, class-transformer and global ValidationPipe"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.5</span
+              ><span class="badge met">MET</span
+              ><span class="category">Validation / errors</span>
+            </div>
+            <h3>
+              <label for="r40"
+                >class-validator, class-transformer and global
+                ValidationPipe</label
+              >
+            </h3>
+            <p>
+              Path UUID validation uses ParseUUIDPipe; rejects
+              unknown/server-owned request fields.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/setup.ts">backend/src/setup.ts</a>
+                <a href="../backend/src/invoices/dto/create-invoice.dto.ts"
+                  >backend/src/invoices/dto/create-invoice.dto.ts</a
+                >
+                <a href="../backend/src/invoices/dto/list-invoices.dto.ts"
+                  >backend/src/invoices/dto/list-invoices.dto.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Validation / errors"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r41"
+            aria-label="Personally reviewed: Clear structured 400 validation errors"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.5</span
+              ><span class="badge met">MET</span
+              ><span class="category">Validation / errors</span>
+            </div>
+            <h3>
+              <label for="r41">Clear structured 400 validation errors</label>
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/common/exception.filter.ts"
+                  >backend/src/common/exception.filter.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Validation / errors"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r42"
+            aria-label="Personally reviewed: Global exception filter and consistent error responses"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.6</span
+              ><span class="badge met">MET</span
+              ><span class="category">Validation / errors</span>
+            </div>
+            <h3>
+              <label for="r42"
+                >Global exception filter and consistent error responses</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/common/exception.filter.ts"
+                  >backend/src/common/exception.filter.ts</a
+                >
+                <a href="../backend/src/common/error.dto.ts"
+                  >backend/src/common/error.dto.ts</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Testing / API docs"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r43"
+            aria-label="Personally reviewed: Backend unit tests for calculations, Overdue, dates and uniqueness"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.7</span
+              ><span class="badge met">MET</span
+              ><span class="category">Testing / API docs</span>
+            </div>
+            <h3>
+              <label for="r43"
+                >Backend unit tests for calculations, Overdue, dates and
+                uniqueness</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/domain/invoice.logic.spec.ts"
+                  >backend/src/invoices/domain/invoice.logic.spec.ts</a
+                >
+                <a href="../backend/src/invoices/dto/create-invoice.dto.spec.ts"
+                  >backend/src/invoices/dto/create-invoice.dto.spec.ts</a
+                >
+                <a href="../backend/src/invoices/invoices.service.spec.ts"
+                  >backend/src/invoices/invoices.service.spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Testing / API docs"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r44"
+            aria-label="Personally reviewed: Integration/E2E test for complete key workflow"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.7</span
+              ><span class="badge met">MET</span
+              ><span class="category">Testing / API docs</span>
+            </div>
+            <h3>
+              <label for="r44"
+                >Integration/E2E test for complete key workflow</label
+              >
+            </h3>
+            <p>
+              Real PostgreSQL create → list → detail, plus actual browser
+              workflow; exceeds the minimum.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+                <a href="tests/browser/invoices.spec.ts"
+                  >tests/browser/invoices.spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Testing / API docs"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r45"
+            aria-label="Personally reviewed: Generated @nestjs/swagger docs at /api/docs"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.8</span
+              ><span class="badge met">MET</span
+              ><span class="category">Testing / API docs</span>
+            </div>
+            <h3>
+              <label for="r45"
+                >Generated @nestjs/swagger docs at /api/docs</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/setup.ts">backend/src/setup.ts</a>
+                <a href="../backend/package.json">backend/package.json</a>
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Testing / API docs"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r46"
+            aria-label="Personally reviewed: Document requests, query parameters, response schemas and status codes"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.3.8</span
+              ><span class="badge met">MET</span
+              ><span class="category">Testing / API docs</span>
+            </div>
+            <h3>
+              <label for="r46"
+                >Document requests, query parameters, response schemas and
+                status codes</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../backend/src/invoices/invoices.controller.ts"
+                  >backend/src/invoices/invoices.controller.ts</a
+                >
+                <a href="../backend/src/auth/auth.controller.ts"
+                  >backend/src/auth/auth.controller.ts</a
+                >
+                <a href="../backend/src/invoices/dto"
+                  >backend/src/invoices/dto</a
+                >
+                <a href="../backend/test/app.e2e-spec.ts"
+                  >backend/test/app.e2e-spec.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Packaging / configuration"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r47"
+            aria-label="Personally reviewed: Monorepo or separate repos; document choice and structure"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.4.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Packaging / configuration</span>
+            </div>
+            <h3>
+              <label for="r47"
+                >Monorepo or separate repos; document choice and
+                structure</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../README.md">README.md</a>
+                <a href="../backend/package.json">backend/package.json</a>
+                <a href="../frontend/package.json">frontend/package.json</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Packaging / configuration"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r48"
+            aria-label="Personally reviewed: Single-command Docker startup from zero"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.4.2 / 4.1</span
+              ><span class="badge met">MET</span
+              ><span class="category">Packaging / configuration</span>
+            </div>
+            <h3>
+              <label for="r48">Single-command Docker startup from zero</label>
+            </h3>
+            <p>
+              npm start generates missing configuration, builds and starts
+              Compose, and waits for health checks. Verified from a clean source
+              copy without installed dependencies, using fresh database storage
+              and isolated ports. Requires Node.js 24 and running Docker
+              Compose; host build cache reused.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../docker-compose.yml">docker-compose.yml</a>
+                <a href="../scripts/setup.mjs">scripts/setup.mjs</a>
+                <a href="../README.md">README.md</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Packaging / configuration"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r49"
+            aria-label="Personally reviewed: Each service has a Dockerfile; exposed ports documented"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.4.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Packaging / configuration</span>
+            </div>
+            <h3>
+              <label for="r49"
+                >Each service has a Dockerfile; exposed ports documented</label
+              >
+            </h3>
+            <p>Default ports: frontend 5180, backend 3001, database 5432.</p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../database/Dockerfile">database/Dockerfile</a>
+                <a href="../backend/Dockerfile">backend/Dockerfile</a>
+                <a href="../frontend/Dockerfile">frontend/Dockerfile</a>
+                <a href="../README.md">README.md</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Packaging / configuration"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r50"
+            aria-label="Personally reviewed: Environment-managed database, JWT, ports and runtime configuration"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.4.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Packaging / configuration</span>
+            </div>
+            <h3>
+              <label for="r50"
+                >Environment-managed database, JWT, ports and runtime
+                configuration</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../.env.example">.env.example</a>
+                <a href="../backend/src/config/environment.ts"
+                  >backend/src/config/environment.ts</a
+                >
+                <a href="../docker-compose.yml">docker-compose.yml</a>
+                <a href="../frontend/vite.config.ts">frontend/vite.config.ts</a>
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Packaging / configuration"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r51"
+            aria-label="Personally reviewed: Complete .env.example without real sensitive values; no hardcoded secrets"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 2.4.3</span
+              ><span class="badge met">MET</span
+              ><span class="category">Packaging / configuration</span>
+            </div>
+            <h3>
+              <label for="r51"
+                >Complete .env.example without real sensitive values; no
+                hardcoded secrets</label
+              >
+            </h3>
+            <p>
+              Only public reviewer demo values and placeholders; setup generates
+              secrets. This is source inspection, not a comprehensive secret
+              scan.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="../.env.example">.env.example</a>
+                <a href="../scripts/setup.mjs">scripts/setup.mjs</a>
+                <a href="../backend/src/database/seed/seed.ts"
+                  >backend/src/database/seed/seed.ts</a
+                >
+              </div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Submission / README"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r52"
+            aria-label="Personally reviewed: Root README includes overview/architecture and Docker/non-Docker instructions"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 4.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Submission / README</span>
+            </div>
+            <h3>
+              <label for="r52"
+                >Root README includes overview/architecture and
+                Docker/non-Docker instructions</label
+              >
+            </h3>
+            <p></p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence"><a href="../README.md">README.md</a></div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="met"
+          data-section="Submission / README"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r53"
+            aria-label="Personally reviewed: README includes credentials, seed instructions, assumptions and limitations"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 4.2</span
+              ><span class="badge met">MET</span
+              ><span class="category">Submission / README</span>
+            </div>
+            <h3>
+              <label for="r53"
+                >README includes credentials, seed instructions, assumptions and
+                limitations</label
+              >
+            </h3>
+            <p>
+              Reviewer demo, reproducible evidence, decisions and URL-state
+              behavior are documented. The stray Listing prefix has been
+              corrected.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence"><a href="../README.md">README.md</a></div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="partial"
+          data-section="Submission / README"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r54"
+            aria-label="Personally reviewed: Source available through repository or ZIP for submission"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 4.2</span
+              ><span class="badge partial">PARTIAL</span
+              ><span class="category">Submission / README</span>
+            </div>
+            <h3>
+              <label for="r54"
+                >Source available through repository or ZIP for
+                submission</label
+              >
+            </h3>
+            <p>
+              The implementation is now committed locally in staged project
+              commits. The configured GitHub remote (DanielVu-CMC/simpleinvoice)
+              is reachable and has a main branch; this does not verify that the
+              application has been published. Commit and push the reviewed
+              implementation or prepare a clean ZIP.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence"><a href="../README.md">README.md</a></div>
+            </details>
+          </div>
+        </article>
+        <article
+          class="check-row"
+          data-status="pending"
+          data-section="Submission / README"
+        >
+          <input
+            class="review-check"
+            type="checkbox"
+            id="r55"
+            aria-label="Personally reviewed: Repository ID, candidate email and delivery before deadline"
+          />
+          <div>
+            <div class="row-top">
+              <span class="reference">§ 4.2</span
+              ><span class="badge pending">PENDING</span
+              ><span class="category">Submission / README</span>
+            </div>
+            <h3>
+              <label for="r55"
+                >Repository ID, candidate email and delivery before
+                deadline</label
+              >
+            </h3>
+            <p>
+              The repository remote is configured and reachable. Candidate email
+              and deadline are not supplied; submission has not been verified.
+              This is an administrative deliverable, not a missing app feature.
+            </p>
+            <details>
+              <summary>Implementation evidence</summary>
+              <div class="evidence">
+                <a href="Assessment_Fullstack_v3.0.0.md"
+                  >Assessment_Fullstack_v3.0.0.md</a
+                >
+                <a href="../README.md">README.md</a>
+              </div>
+            </details>
+          </div>
+        </article>
+      </div>
+      <h2>Evidence and confidence</h2>
+      <div class="panel">
+        <table>
+          <thead>
+            <tr>
+              <th>Evidence</th>
+              <th>Result</th>
+              <th>Scope / confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Current source review</td>
+              <td>All functional checklist entries supported</td>
+              <td>
+                Controllers, DTOs, domain logic, repository, frontend screens,
+                seed, Compose, configuration and tests inspected.
+              </td>
+            </tr>
+            <tr>
+              <td>Unit tests rerun on 16 September</td>
+              <td>100 passed: 58 backend + 42 frontend</td>
+              <td>
+                Critical backend rules and React flows. Passing tests support
+                behavior; they do not prove complete coverage.
+              </td>
+            </tr>
+            <tr>
+              <td>PostgreSQL E2E rerun on 16 September</td>
+              <td>43 passed</td>
+              <td>
+                Dedicated test database; no truncation of the demo database.
+              </td>
+            </tr>
+            <tr>
+              <td>Compose status checked on 16 September</td>
+              <td>All three services healthy</td>
+              <td>
+                Existing running stack on localhost:5180. Clean source-copy
+                startup verified using fresh storage, isolated ports and host
+                build cache.
+              </td>
+            </tr>
+            <tr>
+              <td>Prior verification, 15 September</td>
+              <td>
+                8 browser tests now pass; production frontend rebuilt; type and
+                formatting checks pass
+              </td>
+              <td>
+                <a href="../docs/VERIFICATION.md">Updated verification record</a
+                >. Screenshots refreshed by the browser suite. Dependency audits
+                were not rerun for this update.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>Before submission: fix these first</h2>
+      <div class="panel">
+        <ol>
+          <li>
+            <strong>Package the project.</strong> Review tracked files, exclude
+            local secrets/generated artifacts, commit the implementation, and
+            provide a repository URL or ZIP. Do not send the employer an
+            untracked workspace.
+          </li>
+          <li>
+            <strong>Exercise the reviewer setup from a clean checkout.</strong>
+            Verify documented commands with only the declared prerequisites. A
+            single helper command can generate configuration then run Compose,
+            while retaining environment-managed secrets. State honestly that
+            bare Compose needs the initial .env.
+          </li>
+          <li>
+            <strong>Review the README from a clean checkout.</strong> The stray
+            prefix is fixed and the reviewer demo is linked near the top.
+            Confirm the frontend default of 5180 and exercise the documented run
+            commands.
+          </li>
+          <li>
+            <strong>Confirm delivery details.</strong> Supply the repository
+            ID/URL and candidate email; check the actual due date. The deadline
+            is not in the supplied requirements. Sending email or publishing is
+            outside this report.
+          </li>
+        </ol>
+      </div>
+      <h2>Where a little extra effort will impress</h2>
+      <p>
+        These are judgement-based recommendations for this assessment, ranked by
+        relevance and demonstration value. Time estimates are rough
+        implementation estimates, including meaningful verification; they are
+        not guarantees.
+      </p>
+      <div class="panel">
+        <div class="priority">
+          <div class="rank">DEFERRED · CI</div>
+          <div>
+            <h3>CI that proves a reviewer can trust the submission</h3>
+            <p>
+              Add a GitHub Actions workflow for npm ci, unit tests, type
+              checking, production builds and PostgreSQL integration tests. Use
+              an isolated Postgres service and non-production test secrets. Add
+              a visible status badge once the workflow actually passes.
+            </p>
+            <p>
+              <strong>Why it helps:</strong> demonstrates repeatable quality
+              beyond a local test count. <strong>Done when:</strong> a fresh
+              checkout passes automatically and an intentional regression causes
+              the relevant job to fail. Start with this before another invoice
+              feature.
+            </p>
+          </div>
+        </div>
+        <div class="priority">
+          <div class="rank">DELIVERED · URL</div>
+          <div>
+            <h3>Keep list search, filters, sort and pagination in the URL</h3>
+            <p>
+              Implemented validated URL parameters, filter-change page resets,
+              safe defaults for malformed values and normalization of
+              out-of-range pages. Detail and creation return links retain the
+              register view; pending search text is carried into detail links.
+            </p>
+            <p>
+              Verified by unit/React tests and browser checks for refresh,
+              detail back, browser history and malformed URLs.
+            </p>
+          </div>
+        </div>
+        <div class="priority">
+          <div class="rank">DELIVERED · ACCESS</div>
+          <div>
+            <h3>Prove keyboard and mobile usability</h3>
+            <p>
+              Implemented required-field semantics, linked login errors, route
+              focus, keyboard-visible focus, polite list updates, stronger text
+              contrast, reduced-motion support and modal mobile navigation with
+              Tab containment, Escape and trigger focus restoration.
+            </p>
+            <p>
+              Verified with an actual keyboard-only core workflow and axe scans
+              on login, register, creation before/after validation, details and
+              the open mobile menu. Automated scans do not establish full WCAG
+              compliance.
+            </p>
+          </div>
+        </div>
+        <div class="priority">
+          <div class="rank">DELIVERED · DEMO</div>
+          <div>
+            <h3>A concise reviewer demo and two defensible decisions</h3>
+            <p>
+              Added a short captioned local recording, accessible demo player,
+              transcript, reproducible recording command and sanitized
+              API/database evidence. It highlights 3 × 0.10 = 0.30, half-cent
+              rounding, a real concurrent duplicate race and stored versus
+              derived status.
+            </p>
+            <p>
+              See docs/demo/index.html, docs/DEMO.md and
+              scripts/record-demo.mjs. The recorder uses the real stack and
+              cleans up its generated invoices.
+            </p>
+          </div>
+        </div>
+        <div class="priority">
+          <div class="rank">5 · OPTIONAL<br />2–4 hours</div>
+          <div>
+            <h3>Refine the existing printable invoice</h3>
+            <p>
+              Check print preview with long customer names, multi-line
+              addresses, optional notes, and a narrow page. Keep navigation and
+              controls out of print output and preserve all totals. Use browser
+              printing; a new PDF service is unnecessary for this benefit.
+            </p>
+            <p>
+              <strong>Why it helps:</strong> a visible, relevant convenience on
+              top of the required detail screen. <strong>Done when:</strong> the
+              printed output is readable and correctly paginated for
+              representative data.
+            </p>
+          </div>
+        </div>
+      </div>
+      <h2>Keep the scope disciplined</h2>
+      <div class="panel">
+        <p>
+          Do not prioritize registration, MFA, refresh-token infrastructure,
+          payment integrations, tenant/role management, dashboards or
+          microservices for this submission. They expand the security and
+          product surface without strengthening the requested four-feature
+          workflow.
+        </p>
+        <p>
+          <strong>Do not add multiple line items:</strong> the assessment
+          explicitly asks for exactly one. Keep backend-owned totals and the
+          required status rules. An overdue Draft is expected under the
+          specified derivation rule; changing it to look more intuitive would
+          reduce compliance.
+        </p>
+        <p>
+          The three selected improvements are now delivered: URL-backed list
+          state, keyboard/accessibility polish and a short evidence-backed demo.
+          Finish clean-checkout verification and submission packaging next.
+        </p>
+      </div>
+      <h2>Existing visual evidence</h2>
+      <div class="gallery">
+        <figure>
+          <a href="../docs/screenshots/invoices-desktop.png"
+            ><img
+              src="docs/screenshots/invoices-desktop.png"
+              alt="Existing invoice register desktop screenshot"
+              loading="lazy"
+          /></a>
+          <figcaption class="small">
+            Desktop register · updated browser verification
+          </figcaption>
+        </figure>
+        <figure>
+          <a href="../docs/screenshots/detail-desktop.png"
+            ><img
+              src="docs/screenshots/detail-desktop.png"
+              alt="Existing invoice details desktop screenshot"
+              loading="lazy"
+          /></a>
+          <figcaption class="small">
+            Detail and monetary breakdown · updated browser verification
+          </figcaption>
+        </figure>
+      </div>
+      <footer>
+        Sources: <a href="Assessment_Fullstack_v3.0.0.md">requirements</a> ·
+        <a href="Assessment_Fullstack_v3.0.0.pdf">original PDF</a> ·
+        <a href="../README.md">README</a> ·
+        <a href="../docs/VERIFICATION.md">verification record</a> ·
+        <a href="../docs/BOILERPLATES.md">template provenance</a> · The report
+        is updated for the three selected improvements and the latest local
+        checks. A GitHub remote is reachable; publication of the implementation
+        and delivery of the submission remain unverified.
+      </footer>
+    </main>
+    <script>
+      (() => {
+        const rows = [...document.querySelectorAll('.check-row')],
+          search = document.querySelector('#search'),
+          status = document.querySelector('#status'),
+          section = document.querySelector('#section'),
+          counter = document.querySelector('#counter'),
+          key = 'simpleinvoice-assessment-review-v1';
+        let saved = [];
+        try {
+          saved = JSON.parse(localStorage.getItem(key) || '[]');
+          if (!Array.isArray(saved)) saved = [];
+        } catch {}
+        const checks = rows.map((r) => r.querySelector('input'));
+        checks.forEach((c) => (c.checked = saved.includes(c.id)));
+        function update() {
+          let shown = 0;
+          const q = search.value.toLowerCase().trim();
+          rows.forEach((r) => {
+            r.hidden = !(
+              r.textContent.toLowerCase().includes(q) &&
+              (status.value === 'all' || r.dataset.status === status.value) &&
+              (section.value === 'all' || r.dataset.section === section.value)
+            );
+            if (!r.hidden) shown++;
+          });
+          counter.textContent = `${shown} of ${rows.length} requirements shown · ${checks.filter((c) => c.checked).length} personally reviewed`;
+        }
+        function persist() {
+          try {
+            localStorage.setItem(
+              key,
+              JSON.stringify(checks.filter((c) => c.checked).map((c) => c.id)),
+            );
+          } catch {}
+          update();
+        }
+        [search, status, section].forEach((c) =>
+          c.addEventListener('input', update),
+        );
+        checks.forEach((c) => c.addEventListener('change', persist));
+        document.querySelector('#reset').addEventListener('click', () => {
+          checks.forEach((c) => (c.checked = false));
+          persist();
+        });
+        document
+          .querySelector('#print')
+          .addEventListener('click', () => window.print());
+        update();
+      })();
+    </script>
+  </body>
+</html>
