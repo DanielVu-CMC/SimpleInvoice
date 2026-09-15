@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SimpleInvoice · Reviewer demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f5f4ec;
+        color: #233b31;
+        font:
+          16px/1.6 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 1050px;
+        margin: auto;
+        padding: 40px 22px;
+      }
+      h1 {
+        font-size: clamp(30px, 5vw, 46px);
+        line-height: 1.15;
+      }
+      a {
+        color: #245f45;
+        text-underline-offset: 3px;
+      }
+      video {
+        display: block;
+        width: 100%;
+        background: #1c302c;
+        border-radius: 14px;
+        margin: 24px 0;
+      }
+      section {
+        background: white;
+        padding: 20px 26px;
+        border: 1px solid #d9e0d4;
+        border-radius: 12px;
+        margin: 18px 0;
+      }
+      h2 {
+        font-size: 21px;
+      }
+      li {
+        margin: 10px 0;
+      }
+      .eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-weight: 750;
+      }
+      code {
+        background: #eef3e9;
+        padding: 2px 5px;
+      }
+      a:focus-visible,
+      video:focus-visible {
+        outline: 3px solid #3b785a;
+        outline-offset: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">SimpleInvoice / reviewer walkthrough</div>
+      <h1>Correctness you can see.<br />Evidence you can inspect.</h1>
+      <p>
+        A short captioned recording against the real React, NestJS and
+        PostgreSQL stack. No audio; the transcript below covers the same
+        content.
+      </p>
+      <video
+        controls
+        preload="metadata"
+        aria-label="Captioned SimpleInvoice reviewer walkthrough"
+        aria-describedby="transcript"
+      >
+        <source src="simpleinvoice-demo.webm" type="video/webm" />
+        Your browser cannot play this recording.
+        <a href="simpleinvoice-demo.webm">Download the video</a>.
+      </video>
+      <p>
+        <a href="simpleinvoice-demo.webm" download>Download recording</a> ·
+        <a href="evidence.json">Recorded API/database evidence</a> ·
+        <a href="../DEMO.md"
+          >Technical walkthrough and re-record instructions</a
+        >
+        · <a href="../../README.md">README</a>
+      </p>
+      <section id="transcript">
+        <h2>Transcript</h2>
+        <ol>
+          <li>
+            <strong>Sign in and filter Overdue.</strong> Only unpaid past-due
+            invoices match. The recorder confirms that Appendix A’s stored
+            <code>Pending</code> is returned as <code>Overdue</code>.
+          </li>
+          <li>
+            <strong>Refresh, open details and return.</strong> The selected
+            register view survives through validated URL parameters.
+          </li>
+          <li>
+            <strong>Create a precision example.</strong> Quantity
+            <code>3 × AUD 0.10</code>, tax <code>0%</code> returns exactly
+            <code>AUD 0.30</code>. Totals are calculated exclusively on the
+            backend.
+          </li>
+          <li>
+            <strong>Send two simultaneous creates.</strong> A shared number
+            produces <code>201 + 409</code>. The winner demonstrates half-up tax
+            rounding: <code>AUD 0.05 + 10% = AUD 0.06</code>.
+          </li>
+        </ol>
+      </section>
+      <section>
+        <h2>Also verified</h2>
+        <p>
+          A keyboard-only login → create → search → detail → back workflow,
+          linked field errors, mobile menu focus trapping with Escape/restore,
+          and automated accessibility checks across all four screens. See the
+          repository’s browser tests for reproducible evidence.
+        </p>
+        <p>
+          Captions are added by the recorder, not the shipped application.
+          Concurrent API calls and the database read are performed by the
+          recorder; their values are saved in
+          <a href="evidence.json">evidence.json</a>. Generated invoices are
+          cleaned up after recording.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

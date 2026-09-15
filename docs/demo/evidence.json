@@ -1,0 +1,25 @@
+{
+  "recordedAt": "2026-09-15T20:16:40.915Z",
+  "decimal": {
+    "quantity": 3,
+    "rate": "0.10",
+    "taxPercent": 0,
+    "returnedTotalAmount": "0.30"
+  },
+  "concurrentUniqueness": {
+    "simultaneousRequests": 2,
+    "invoiceNumber": "DEMO-RACE-1789503423245",
+    "statusCodes": [
+      201,
+      409
+    ],
+    "returnedTax": "0.01",
+    "returnedTotalAmount": "0.06"
+  },
+  "overdue": {
+    "invoiceNumber": "IV1780488206995",
+    "storedStatus": "Pending",
+    "returnedStatus": "Overdue",
+    "dueDate": "2026-07-03"
+  }
+}
