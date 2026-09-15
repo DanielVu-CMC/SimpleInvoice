@@ -1,0 +1,27 @@
+{
+  "name": "simpleinvoice",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix backend ci && npm --prefix frontend ci",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "typecheck": "npm --prefix backend run typecheck && npm --prefix frontend run typecheck",
+    "test": "npm --prefix backend test && npm --prefix frontend test",
+    "test:e2e": "npm --prefix backend run test:e2e",
+    "test:browser": "playwright test",
+    "seed": "npm --prefix backend run seed",
+    "format": "prettier --write backend/src backend/test frontend/src frontend/vite.config.ts README.md docker-compose.yml",
+    "format:check": "prettier --check backend/src backend/test frontend/src frontend/vite.config.ts README.md docker-compose.yml",
+    "setup": "node scripts/setup.mjs",
+    "test:database": "node scripts/test-database.mjs",
+    "demo:record": "node scripts/record-demo.mjs",
+    "start": "node scripts/start.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
+    "dotenv": "17.3.1",
+    "prettier": "3.8.3"
+  },
+  "type": "module"
+}

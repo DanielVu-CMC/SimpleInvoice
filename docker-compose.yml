@@ -1,0 +1,59 @@
+name: simpleinvoice
+services:
+  database:
+    build: ./database
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME:?Run npm run setup first}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Run npm run setup first}
+      POSTGRES_DB: ${DATABASE_NAME:?Run npm run setup first}
+    ports:
+      - '127.0.0.1:${DATABASE_PORT:-5432}:5432'
+    volumes:
+      - invoice-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@database:5432/${DATABASE_NAME}
+    ports:
+      - '127.0.0.1:${APP_PORT:-3001}:${APP_PORT:-3001}'
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:'+process.env.APP_PORT+'/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
+        VITE_PAGE_SIZE: ${VITE_PAGE_SIZE:-10}
+    environment:
+      APP_PORT: ${APP_PORT:-3001}
+    ports:
+      - '127.0.0.1:${FRONTEND_PORT:-5180}:80'
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1/']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  invoice-data:
