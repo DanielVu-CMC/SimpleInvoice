@@ -61,6 +61,7 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const result = await this.auth.login(dto);
+    response.locals.authUserId = result.user.id;
     response.setHeader('Cache-Control', 'no-store');
     response.cookie('access_token', result.accessToken, {
       ...this.cookieOptions(),

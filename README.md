@@ -204,6 +204,20 @@ npm run test:browser
 
 Backend tests cover calculations, half-cent rounding, precision, overdue boundary conditions, date validation, required inputs, unique invoice constraints (including concurrency), auth/cookies/JWT expiry, error shapes, search, status filtering, sorting, pagination, date bounds, seeding, and Swagger. Frontend tests cover protected navigation, login validation, login failure, logout/expiry, unavailable APIs, listing controls, empty states, creation validation/success, and invoice details. Browser tests exercise actual login, creation/detail, filtering, pagination, logout, and mobile rendering.
 
+## Request and authentication logs
+
+Every backend HTTP request receives a fresh UUID in the `X-Request-ID` response header, including failed requests. The server generates this ID even if a caller supplies one. Browser clients can read the header through CORS. Find it in the browser Network panel and search the backend logs for the same value:
+
+```sh
+docker compose logs backend
+```
+
+Nest logs contain JSON event messages with `requestId`. `http.request` records the method, matched route template (or `unmatched`), response status, duration in milliseconds, and completion/abort outcome. `http.error` links unexpected server errors to the same ID and includes stack frames without the exception message. An aborted request has no completed response status.
+
+Authentication events include `auth.login_success` (with the authenticated user's ID), `auth.login_failure` (bad credentials), `auth.login_rejected` (such as validation, origin, or rate-limit rejection), `auth.login_error`, `auth.login_aborted`, and `auth.access_denied` (other HTTP 401 responses). `auth.logout_cookie_cleared` records successful cookie clearing, not token revocation or a verified user logout.
+
+Logs omit request/response bodies, query strings, submitted emails, passwords, tokens, cookies, and authorization headers. They use the existing Nest console logger; no external monitoring service is required. Requests served entirely by frontend Nginx do not receive a backend request ID.
+
 ## Scope and limitations
 
 - Editing/deleting invoices, changing their status, recording payments, registration, password resets, and multi-item creation are outside the four-feature assessment scope. Seed data demonstrates Pending/Paid and partially paid invoices.

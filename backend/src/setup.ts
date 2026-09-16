@@ -1,15 +1,13 @@
-import {
-  ForbiddenException,
-  INestApplication,
-  ValidationPipe,
-} from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { GlobalExceptionFilter } from './common/exception.filter';
+import { requestLogging } from './common/request-logging';
 export function setupApplication(app: INestApplication) {
+  app.use(requestLogging);
   const config = app.get(ConfigService);
   const origins = config
     .getOrThrow<string>('CORS_ORIGIN')
@@ -21,6 +19,7 @@ export function setupApplication(app: INestApplication) {
     origin: origins,
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['X-Request-ID'],
   });
   app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('Cache-Control', 'no-store');

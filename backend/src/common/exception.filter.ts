@@ -23,7 +23,19 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         : undefined;
     if (statusCode >= 500)
       this.logger.error(
-        exception instanceof Error ? exception.stack : 'Unexpected error',
+        JSON.stringify({
+          event: 'http.error',
+          requestId: response.locals.requestId as string | undefined,
+          statusCode,
+          // Error messages may contain SQL values or credentials. Keep only
+          // stack frames for debugging, never the message or error object.
+          stackFrames:
+            exception instanceof Error
+              ? exception.stack
+                  ?.split('\n')
+                  .filter((line) => /^\s+at /.test(line))
+              : undefined,
+        }),
       );
     response.status(statusCode).json({
       statusCode,
