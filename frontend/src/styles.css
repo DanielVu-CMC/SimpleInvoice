@@ -1481,6 +1481,11 @@ td.overdue-date {
   }
 }
 @media print {
+  /* Remove the margin area used by browser-generated headers and footers.
+     Keep the invoice inset using document padding instead. */
+  @page {
+    margin: 0;
+  }
   :root,
   body {
     background: white;
@@ -1506,7 +1511,7 @@ td.overdue-date {
   }
   .invoice-document {
     border: none;
-    padding: 12px;
+    padding: 12mm;
   }
   .table-scroll {
     position: relative;
