@@ -1,6 +1,6 @@
 # Verification
 
-Verified locally on 2026-09-15; selected improvements verified again on 2026-09-16 using Node.js 24 on Apple Silicon macOS and OrbStack 2.2.3.
+Baseline verified locally on 2026-09-15, with selected improvements verified on 2026-09-16 using Node.js 24 on Apple Silicon macOS and OrbStack 2.2.3. The table below records that baseline; later logging and print checks are recorded separately below. Historical browser and PostgreSQL results do not imply those suites were rerun after every change.
 
 | Check                                   | Result                            |
 | --------------------------------------- | --------------------------------- |
@@ -43,3 +43,10 @@ All services became healthy. Frontend, seeded reviewer login through the proxy, 
 ## Commit preparation — 2026-09-16
 
 Reran 100 unit tests (58 backend, 42 frontend), TypeScript checks, and formatting successfully before committing. Existing work was grouped into requirements, selected skills, Claude context, implementation, tests, documentation, and demo commits. These commits organize the existing project; they do not reconstruct its original development chronology or establish Claude authorship. Local environment files and generated dependencies/build artifacts remain ignored.
+
+## Logging and printing follow-up — 2026-09-16
+
+- Backend tests increased to 65 across five suites after adding request/authentication logging, and passed. Backend typecheck and build passed; changed backend files passed formatting checks.
+- The logging tests verify distinct UUIDs for concurrent requests, response/log correlation, sensitive-data exclusion, failed and rejected login, internal errors, logout cookie clearing, malformed JSON, unknown routes, and CORS exposure. Authentication is stubbed in these focused tests; they do not replace database integration checks.
+- The frontend build and Docker frontend rebuild passed after the print stylesheet change. The served CSS was checked for zero page margins and invoice padding. The reviewer confirmed the print issue was resolved after refreshing Chrome’s cached page.
+- These follow-up checks did not rerun the PostgreSQL or full browser suites.

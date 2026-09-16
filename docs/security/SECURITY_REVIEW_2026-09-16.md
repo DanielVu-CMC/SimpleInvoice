@@ -2,7 +2,7 @@
 
 ## Executive summary
 
-Reviewed on 2026-09-16 using `.claude/skills/security-reviewer/SKILL.md`, against commit `f4a7ba1` and the current working tree. The pre-existing README edit was included as context and left unchanged.
+Reviewed on 2026-09-16 using `.claude/skills/security-reviewer/SKILL.md`, against commit `f4a7ba1` and the working tree at review time. Logging was subsequently added in commit `6f9f0de`; baseline scan results below are historical. The pre-existing README edit was included as context and left unchanged.
 
 The application has strong baseline controls for its stated local assessment scope. The main verified defect is shared rate-limit buckets behind the included Nginx proxy. Production configuration also accepts public example credentials, which would be a serious risk if deployed unchanged. No SQL injection, unguarded invoice endpoint, or unsafe React HTML rendering was identified in the reviewed paths.
 
@@ -10,7 +10,7 @@ The application has strong baseline controls for its stated local assessment sco
 
 **Risk assessment:** Low practical risk for the intended local assessment use. The technical findings remain documented, but their scenario-based severity scores do not imply assessment blockers. Shared proxy rate limits can still inconvenience a reviewer; password truncation matters only when configuring a password beyond bcrypt's byte limit.
 
-**Review status:** Complete with the assessment-only scope confirmed by the project owner. Remediation is optional within that scope. The recommended disposition is to retain the current implementation and acknowledge the limitations; no application fixes were applied or are required by this report for submission.
+**Review status:** Complete with the assessment-only scope confirmed by the project owner. Remediation is optional within that scope. The recommended disposition is to retain the current implementation and acknowledge the limitations; SEC-001–003 remain accepted without fixes. The separate logging observation was addressed in the follow-up described below.
 
 ## Scope and authorization
 
@@ -22,23 +22,23 @@ The assessment specification intentionally requires a documented reviewer accoun
 
 CVSS v3.1 scores are analyst estimates for the stated attack scenarios, not measurements of deployment exposure or priorities for this assessment. The original technical scores are retained for transparency; practical applicability and recommended disposition are recorded separately below.
 
-| ID | Severity | CVSS | Finding | Evidence |
-| --- | --- | --- | --- | --- |
-| SEC-001 | High | 8.2 | Public example credentials accepted in production configuration | Configuration proof and source review; deployment-dependent |
-| SEC-002 | Medium | 5.3 | Proxy clients share login rate-limit bucket | Isolated application proof |
-| SEC-003 | Low | 3.7 | Passwords exceeding bcrypt's byte limit silently lose their suffix | Library proof and source review |
+| ID      | Severity | CVSS | Finding                                                            | Evidence                                                    |
+| ------- | -------- | ---- | ------------------------------------------------------------------ | ----------------------------------------------------------- |
+| SEC-001 | High     | 8.2  | Public example credentials accepted in production configuration    | Configuration proof and source review; deployment-dependent |
+| SEC-002 | Medium   | 5.3  | Proxy clients share login rate-limit bucket                        | Isolated application proof                                  |
+| SEC-003 | Low      | 3.7  | Passwords exceeding bcrypt's byte limit silently lose their suffix | Library proof and source review                             |
 
 Technical scenario counts: **0 Critical, 1 High, 1 Medium, 1 Low**. The High finding concerns a production deployment explicitly excluded from this project's scope. Two additional unscored hardening observations appear below. A clean dependency audit is not evidence that the application has no vulnerabilities.
 
 ### Assessment disposition
 
-| Item | Applicability to this assessment | Recommended decision |
-| --- | --- | --- |
+| Item                                | Applicability to this assessment                                                                                                                  | Recommended decision                                                                     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | SEC-001: Public example credentials | Documented reviewer access and automatic demo seeding support the assessment requirements. Production configuration safeguards are outside scope. | Acknowledge; retain demo behavior and the existing setup-generated JWT/database secrets. |
-| SEC-002: Shared proxy rate limits | Applies to the included topology; repeated login attempts can temporarily block local reviewer sessions. | Acknowledge; fix optionally if reviewer usability warrants it. |
-| SEC-003: bcrypt byte limit | The supplied reviewer password does not reach the limit; custom long seed passwords can. | Acknowledge; byte-length validation is an optional correctness improvement. |
-| Database initialization role | Simplifies local initialization, migrations, and seeding of sample data. | Retain for the assessment; no separate runtime role required. |
-| Authentication audit records | Operational monitoring is outside the assessment requirements. | Document as a limitation; no monitoring infrastructure required. |
+| SEC-002: Shared proxy rate limits   | Applies to the included topology; repeated login attempts can temporarily block local reviewer sessions.                                          | Acknowledge; fix optionally if reviewer usability warrants it.                           |
+| SEC-003: bcrypt byte limit          | The supplied reviewer password does not reach the limit; custom long seed passwords can.                                                          | Acknowledge; byte-length validation is an optional correctness improvement.              |
+| Database initialization role        | Simplifies local initialization, migrations, and seeding of sample data.                                                                          | Retain for the assessment; no separate runtime role required.                            |
+| Authentication audit records        | Local request/authentication logs were added after the review for debugging.                                                                      | Addressed by `6f9f0de`; no external monitoring infrastructure required.                  |
 
 The remediation and acceptance checks below describe how a fix could be implemented and verified if chosen. They are not mandatory submission criteria.
 
@@ -51,7 +51,7 @@ The remediation and acceptance checks below describe how a fix could be implemen
 
 **Impact:** If these public values are retained in a reachable deployment, someone can authenticate using the documented demo password. A retained public JWT key also permits token signing for a known existing user. JWT algorithm, audience, issuer, and user-existence checks do not protect against a known signing key.
 
-**Limits:** `npm run setup` generates random database and JWT secrets for a new `.env`; this materially mitigates the signing-key issue on the recommended setup path. It intentionally keeps the documented reviewer password. The README instructs deployers to change the credentials. No local private secret was printed or evaluated for compromise, and no deployed authentication bypass was attempted.
+**Limits:** `npm run setup` generates random database and JWT secrets for a new `.env`; this materially mitigates the signing-key issue on the recommended setup path. It intentionally keeps the documented reviewer password. At review time, the README instructed deployers to change the credentials; the confirmed project scope now explicitly excludes deployment. No local private secret was printed or evaluated for compromise, and no deployed authentication bypass was attempted.
 
 **Remediation:** Reject known placeholder JWT/database secrets and demo account credentials when production mode is enabled. Gate demo seeding explicitly and keep it off in production. Provision production accounts separately. Rotate an existing seeded account through an explicit administrative action: changing the seed password environment variable does not update an existing user's hash. Rotate any signing key that has actually been deployed with a public value.
 
@@ -97,9 +97,9 @@ This expands the consequences of stolen backend database credentials or a future
 
 ### Authentication events lack explicit audit records — addressed in follow-up
 
-`backend/src/auth/auth.service.ts:20` handles successful and failed login without explicit security event logging. `backend/src/common/exception.filter.ts:26` logs server errors, not a structured authentication audit trail. Nginx access logs may provide request metadata, but do not replace account-aware events. No operational logging platform was assessed.
+**Original observation:** At the reviewed baseline, `backend/src/auth/auth.service.ts:20` handled successful and failed login without explicit security event logging, and `backend/src/common/exception.filter.ts:26` logged server errors without a structured authentication audit trail. Nginx access logs may provide request metadata, but do not replace account-aware events. No operational logging platform was assessed.
 
-Add structured authentication success/failure and limiter events for production monitoring, with retention/access controls and no passwords, JWTs, or cookie contents. No standalone CVSS score is assigned because this is a detection gap.
+**Original recommendation:** Add structured authentication success/failure and limiter events for monitoring, with retention/access controls and no passwords, JWTs, or cookie contents. No standalone CVSS score is assigned because this is a detection gap.
 
 **Follow-up implementation:** At the owner's request, local request and authentication logging was added after this review. Every backend request receives a server-generated UUID returned in `X-Request-ID`. Structured event messages correlate request completion, unexpected errors, successful and unsuccessful login, rejected login requests (including rate limits), unauthorized access, and logout cookie clearing. Successful login events include the user ID; bodies, submitted emails, credentials, query strings, and raw exception messages are excluded. This addresses the local authentication logging gap without adding external monitoring infrastructure. SEC-001, SEC-002, and SEC-003 remain acknowledged without fixes under the assessment-only decision. The original review test results below describe the review baseline, before this follow-up.
 
@@ -119,18 +119,18 @@ The shared invoice register is intentional under the specification, not an IDOR 
 
 ## Verification and limitations
 
-| Activity | Result |
-| --- | --- |
-| Root `npm audit --json` | 0 reported vulnerabilities; 7 dependencies reported |
-| Backend `npm --prefix backend audit --json` | 0 reported vulnerabilities; 812 dependencies reported |
-| Frontend `npm --prefix frontend audit --json` | 0 reported vulnerabilities; 193 dependencies reported |
-| `npm test` | 58 backend tests and 42 frontend tests passed; 8 suites total |
-| Production example configuration proof | Accepted by real validator |
-| Isolated proxy/rate-limit proof | Second synthetic forwarded client received 429 after first exhausted budget |
-| Synthetic bcrypt boundary proof | Distinct suffixes after 72 bytes compared equal |
-| Automated source-pattern search | Reviewed query construction, execution/HTML sinks, token storage, and credential references manually |
-| Tracked-file credential-pattern scan | 110 text files scanned; no matches for the selected AWS/GitHub/Slack/private-key/JWT patterns outside bundled skill files |
-| Tracked environment files | Only `.env.example` tracked; private local environment contents not printed |
+| Activity                                      | Result                                                                                                                    |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Root `npm audit --json`                       | 0 reported vulnerabilities; 7 dependencies reported                                                                       |
+| Backend `npm --prefix backend audit --json`   | 0 reported vulnerabilities; 812 dependencies reported                                                                     |
+| Frontend `npm --prefix frontend audit --json` | 0 reported vulnerabilities; 193 dependencies reported                                                                     |
+| `npm test`                                    | 58 backend tests and 42 frontend tests passed; 8 suites total                                                             |
+| Production example configuration proof        | Accepted by real validator                                                                                                |
+| Isolated proxy/rate-limit proof               | Second synthetic forwarded client received 429 after first exhausted budget                                               |
+| Synthetic bcrypt boundary proof               | Distinct suffixes after 72 bytes compared equal                                                                           |
+| Automated source-pattern search               | Reviewed query construction, execution/HTML sinks, token storage, and credential references manually                      |
+| Tracked-file credential-pattern scan          | 110 text files scanned; no matches for the selected AWS/GitHub/Slack/private-key/JWT patterns outside bundled skill files |
+| Tracked environment files                     | Only `.env.example` tracked; private local environment contents not printed                                               |
 
 The dependency audits ran before manual authentication review and included development dependencies. Their results reflect the registry response at review time; they do not cover base-image OS packages or unknown vulnerabilities.
 

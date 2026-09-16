@@ -317,7 +317,7 @@
     <main>
       <header>
         <div class="eyebrow">SimpleInvoice / submission review</div>
-        <h1>A strong implementation.<br />A few finishing moves.</h1>
+        <h1>Assessment checklist complete.</h1>
         <p class="intro">
           Requirement-by-requirement assessment against
           <a href="Assessment_Fullstack_v3.0.0.md"
@@ -332,16 +332,16 @@
       </header>
       <div class="metrics">
         <div class="metric">
-          <strong>97.3%</strong><span>Checklist fulfillment proxy</span>
+          <strong>100%</strong><span>Checklist fulfillment proxy</span>
         </div>
         <div class="metric">
-          <strong>54/56</strong><span>Requirements assessed as met</span>
+          <strong>56/56</strong><span>Requirements assessed as met</span>
         </div>
         <div class="metric">
-          <strong>1 partial</strong><span>Packaging / submission gaps</span>
+          <strong>0 partial</strong><span>Packaging / submission gaps</span>
         </div>
         <div class="metric">
-          <strong>1 pending</strong><span>Administrative delivery</span>
+          <strong>0 pending</strong><span>Administrative delivery</span>
         </div>
       </div>
       <div class="note">
@@ -349,8 +349,9 @@
         consolidated checklist entries has equal weight. Repeated wording in the
         specification is consolidated. This is a transparent tracking measure,
         not an official weighted rubric or test-coverage percentage. All four
-        requested application features are implemented; packaging and delivery
-        keep this below 100%.
+        requested application features are implemented; repository/ZIP
+        availability and administrative delivery are complete based on candidate
+        confirmation.
       </div>
       <h2>Assessment verdict</h2>
       <div class="panel">
@@ -373,12 +374,11 @@
           strengths by adding several unfinished product features.
         </p>
         <p>
-          <strong>Remaining issues:</strong> source is now committed locally,
-          but publication remains unverified, the GitHub remote is reachable but
-          the implementation has not been verified there, and the candidate
-          email/deadline are unknown. The README typo has been corrected. CI
-          remains an optional improvement and was not selected for
-          implementation.
+          <strong>Submission complete:</strong> the candidate confirmed source
+          availability and completion of the repository ID, candidate email and
+          on-time delivery requirements. These administrative items are accepted
+          on that confirmation, not an independent delivery audit. CI remains
+          optional and was not selected for implementation.
         </p>
       </div>
       <div class="panel">
@@ -594,7 +594,7 @@
                 <a href="../backend/src/auth/jwt-auth.guard.ts"
                   >backend/src/auth/jwt-auth.guard.ts</a
                 >
-                <a href="tests/browser/invoices.spec.ts"
+                <a href="../tests/browser/invoices.spec.ts"
                   >tests/browser/invoices.spec.ts</a
                 >
               </div>
@@ -740,7 +740,7 @@
                 <a href="../frontend/src/features/invoices/list-page.tsx"
                   >frontend/src/features/invoices/list-page.tsx</a
                 >
-                <a href="tests/browser/invoices.spec.ts"
+                <a href="../tests/browser/invoices.spec.ts"
                   >tests/browser/invoices.spec.ts</a
                 >
               </div>
@@ -941,7 +941,7 @@
                 <a href="../frontend/src/features/invoices/detail-page.tsx"
                   >frontend/src/features/invoices/detail-page.tsx</a
                 >
-                <a href="tests/browser/invoices.spec.ts"
+                <a href="../tests/browser/invoices.spec.ts"
                   >tests/browser/invoices.spec.ts</a
                 >
               </div>
@@ -1327,7 +1327,7 @@
                 <a href="../backend/test/app.e2e-spec.ts"
                   >backend/test/app.e2e-spec.ts</a
                 >
-                <a href="tests/browser/invoices.spec.ts"
+                <a href="../tests/browser/invoices.spec.ts"
                   >tests/browser/invoices.spec.ts</a
                 >
               </div>
@@ -1364,7 +1364,7 @@
                 <a href="../frontend/src/app.test.tsx"
                   >frontend/src/app.test.tsx</a
                 >
-                <a href="tests/browser/invoices.spec.ts"
+                <a href="../tests/browser/invoices.spec.ts"
                   >tests/browser/invoices.spec.ts</a
                 >
               </div>
@@ -1465,7 +1465,7 @@
               <summary>Implementation evidence</summary>
               <div class="evidence">
                 <a href="../frontend/src/styles.css">frontend/src/styles.css</a>
-                <a href="tests/browser/invoices.spec.ts"
+                <a href="../tests/browser/invoices.spec.ts"
                   >tests/browser/invoices.spec.ts</a
                 >
                 <a href="../docs/screenshots/invoices-mobile.png"
@@ -1939,7 +1939,7 @@
             <details>
               <summary>Implementation evidence</summary>
               <div class="evidence">
-                <a href="package.json">package.json</a>
+                <a href="../package.json">package.json</a>
                 <a href="../backend/package.json">backend/package.json</a>
                 <a href="../backend/scripts/run-seed.cjs"
                   >backend/scripts/run-seed.cjs</a
@@ -2135,7 +2135,7 @@
                 <a href="../backend/test/app.e2e-spec.ts"
                   >backend/test/app.e2e-spec.ts</a
                 >
-                <a href="tests/browser/invoices.spec.ts"
+                <a href="../tests/browser/invoices.spec.ts"
                   >tests/browser/invoices.spec.ts</a
                 >
               </div>
@@ -2468,7 +2468,7 @@
         </article>
         <article
           class="check-row"
-          data-status="partial"
+          data-status="met"
           data-section="Submission / README"
         >
           <input
@@ -2480,7 +2480,7 @@
           <div>
             <div class="row-top">
               <span class="reference">§ 4.2</span
-              ><span class="badge partial">PARTIAL</span
+              ><span class="badge met">MET</span
               ><span class="category">Submission / README</span>
             </div>
             <h3>
@@ -2490,11 +2490,9 @@
               >
             </h3>
             <p>
-              The implementation is now committed locally in staged project
-              commits. The configured GitHub remote (DanielVu-CMC/simpleinvoice)
-              is reachable and has a main branch; this does not verify that the
-              application has been published. Commit and push the reviewed
-              implementation or prepare a clean ZIP.
+              The candidate confirmed that the reviewed source is available
+              through the repository or ZIP for submission. Marked complete
+              based on candidate confirmation.
             </p>
             <details>
               <summary>Implementation evidence</summary>
@@ -2504,7 +2502,7 @@
         </article>
         <article
           class="check-row"
-          data-status="pending"
+          data-status="met"
           data-section="Submission / README"
         >
           <input
@@ -2516,7 +2514,7 @@
           <div>
             <div class="row-top">
               <span class="reference">§ 4.2</span
-              ><span class="badge pending">PENDING</span
+              ><span class="badge met">MET</span
               ><span class="category">Submission / README</span>
             </div>
             <h3>
@@ -2526,9 +2524,10 @@
               >
             </h3>
             <p>
-              The repository remote is configured and reachable. Candidate email
-              and deadline are not supplied; submission has not been verified.
-              This is an administrative deliverable, not a missing app feature.
+              The candidate confirmed completion of the repository ID, candidate
+              email and delivery-before-deadline requirements. Marked complete
+              based on candidate confirmation; no private delivery details are
+              reproduced here.
             </p>
             <details>
               <summary>Implementation evidence</summary>
@@ -2562,11 +2561,12 @@
               </td>
             </tr>
             <tr>
-              <td>Unit tests rerun on 16 September</td>
+              <td>Baseline unit tests, 16 September</td>
               <td>100 passed: 58 backend + 42 frontend</td>
               <td>
-                Critical backend rules and React flows. Passing tests support
-                behavior; they do not prove complete coverage.
+                Baseline before request logging. A later backend run passed 65
+                tests; the frontend baseline remains 42. These were separate
+                runs, not a fresh combined run. See the verification record.
               </td>
             </tr>
             <tr>
@@ -2586,10 +2586,10 @@
               </td>
             </tr>
             <tr>
-              <td>Prior verification, 15 September</td>
+              <td>Browser/UI verification, 15–16 September</td>
               <td>
-                8 browser tests now pass; production frontend rebuilt; type and
-                formatting checks pass
+                8 browser tests passed at the UI baseline; frontend rebuilt;
+                type and formatting checks passed
               </td>
               <td>
                 <a href="../docs/VERIFICATION.md">Updated verification record</a
@@ -2600,21 +2600,21 @@
           </tbody>
         </table>
       </div>
-      <h2>Before submission: fix these first</h2>
+      <h2>Submission preparation and verification status</h2>
       <div class="panel">
         <ol>
           <li>
-            <strong>Package the project.</strong> Review tracked files, exclude
-            local secrets/generated artifacts, commit the implementation, and
-            provide a repository URL or ZIP. Do not send the employer an
-            untracked workspace.
+            <strong>Source availability — complete.</strong> Repository or ZIP
+            availability confirmed by the candidate.
           </li>
           <li>
             <strong>Exercise the reviewer setup from a clean checkout.</strong>
-            Verify documented commands with only the declared prerequisites. A
-            single helper command can generate configuration then run Compose,
-            while retaining environment-managed secrets. State honestly that
-            bare Compose needs the initial .env.
+            <code>npm start</code> is implemented: it generates a missing .env,
+            builds and starts Compose, then waits for health checks. Clean
+            source-copy startup was verified with fresh storage and isolated
+            ports. That check reused the host build cache; a fresh remote
+            checkout has not been verified. Bare Compose still requires an
+            existing .env.
           </li>
           <li>
             <strong>Review the README from a clean checkout.</strong> The stray
@@ -2623,119 +2623,20 @@
             commands.
           </li>
           <li>
-            <strong>Confirm delivery details.</strong> Supply the repository
-            ID/URL and candidate email; check the actual due date. The deadline
-            is not in the supplied requirements. Sending email or publishing is
-            outside this report.
+            <strong>Administrative delivery — complete.</strong> Repository ID,
+            candidate email and delivery before the deadline confirmed by the
+            candidate.
           </li>
         </ol>
-      </div>
-      <h2>Where a little extra effort will impress</h2>
-      <p>
-        These are judgement-based recommendations for this assessment, ranked by
-        relevance and demonstration value. Time estimates are rough
-        implementation estimates, including meaningful verification; they are
-        not guarantees.
-      </p>
-      <div class="panel">
-        <div class="priority">
-          <div class="rank">DEFERRED · CI</div>
-          <div>
-            <h3>CI that proves a reviewer can trust the submission</h3>
-            <p>
-              Add a GitHub Actions workflow for npm ci, unit tests, type
-              checking, production builds and PostgreSQL integration tests. Use
-              an isolated Postgres service and non-production test secrets. Add
-              a visible status badge once the workflow actually passes.
-            </p>
-            <p>
-              <strong>Why it helps:</strong> demonstrates repeatable quality
-              beyond a local test count. <strong>Done when:</strong> a fresh
-              checkout passes automatically and an intentional regression causes
-              the relevant job to fail. Start with this before another invoice
-              feature.
-            </p>
-          </div>
-        </div>
-        <div class="priority">
-          <div class="rank">DELIVERED · URL</div>
-          <div>
-            <h3>Keep list search, filters, sort and pagination in the URL</h3>
-            <p>
-              Implemented validated URL parameters, filter-change page resets,
-              safe defaults for malformed values and normalization of
-              out-of-range pages. Detail and creation return links retain the
-              register view; pending search text is carried into detail links.
-            </p>
-            <p>
-              Verified by unit/React tests and browser checks for refresh,
-              detail back, browser history and malformed URLs.
-            </p>
-          </div>
-        </div>
-        <div class="priority">
-          <div class="rank">DELIVERED · ACCESS</div>
-          <div>
-            <h3>Prove keyboard and mobile usability</h3>
-            <p>
-              Implemented required-field semantics, linked login errors, route
-              focus, keyboard-visible focus, polite list updates, stronger text
-              contrast, reduced-motion support and modal mobile navigation with
-              Tab containment, Escape and trigger focus restoration.
-            </p>
-            <p>
-              Verified with an actual keyboard-only core workflow and axe scans
-              on login, register, creation before/after validation, details and
-              the open mobile menu. Automated scans do not establish full WCAG
-              compliance.
-            </p>
-          </div>
-        </div>
-        <div class="priority">
-          <div class="rank">DELIVERED · DEMO</div>
-          <div>
-            <h3>A concise reviewer demo and two defensible decisions</h3>
-            <p>
-              Added a short captioned local recording, accessible demo player,
-              transcript, reproducible recording command and sanitized
-              API/database evidence. It highlights 3 × 0.10 = 0.30, half-cent
-              rounding, a real concurrent duplicate race and stored versus
-              derived status.
-            </p>
-            <p>
-              See docs/demo/index.html, docs/DEMO.md and
-              scripts/record-demo.mjs. The recorder uses the real stack and
-              cleans up its generated invoices.
-            </p>
-          </div>
-        </div>
-        <div class="priority">
-          <div class="rank">5 · OPTIONAL<br />2–4 hours</div>
-          <div>
-            <h3>Refine the existing printable invoice</h3>
-            <p>
-              Check print preview with long customer names, multi-line
-              addresses, optional notes, and a narrow page. Keep navigation and
-              controls out of print output and preserve all totals. Use browser
-              printing; a new PDF service is unnecessary for this benefit.
-            </p>
-            <p>
-              <strong>Why it helps:</strong> a visible, relevant convenience on
-              top of the required detail screen. <strong>Done when:</strong> the
-              printed output is readable and correctly paginated for
-              representative data.
-            </p>
-          </div>
-        </div>
       </div>
       <h2>Keep the scope disciplined</h2>
       <div class="panel">
         <p>
           Do not prioritize registration, MFA, refresh-token infrastructure,
-          payment integrations, tenant/role management, dashboards or
-          microservices for this submission. They expand the security and
-          product surface without strengthening the requested four-feature
-          workflow.
+          manual invoice status updates, payment integrations, tenant/role
+          management, dashboards or microservices for this submission. They
+          expand the security and product surface without strengthening the
+          requested four-feature workflow.
         </p>
         <p>
           <strong>Do not add multiple line items:</strong> the assessment
@@ -2745,9 +2646,43 @@
           reduce compliance.
         </p>
         <p>
-          The three selected improvements are now delivered: URL-backed list
-          state, keyboard/accessibility polish and a short evidence-backed demo.
-          Finish clean-checkout verification and submission packaging next.
+          URL-backed list state, keyboard/accessibility polish and the
+          evidence-backed demo are delivered. Local request/authentication
+          logging and print header/footer cleanup were added afterward. Clean
+          source-copy startup is verified; a fresh remote checkout was not
+          tested. Administrative delivery is complete based on candidate
+          confirmation.
+        </p>
+      </div>
+      <h2>Local-only scope and follow-up changes</h2>
+      <div class="panel">
+        <p>
+          This is exclusively a local take-home assessment using sample data;
+          production deployment is not planned. SEC-001, SEC-002 and SEC-003 are
+          acknowledged without fixes in the
+          <a href="../docs/security/SECURITY_REVIEW_2026-09-16.md"
+            >security review</a
+          >. They are not submission blockers under that scope.
+        </p>
+        <p>
+          Backend requests now receive UUIDs in the X-Request-ID response
+          header, with correlated request, error and authentication event logs.
+          Sensitive request data is omitted. The logging follow-up passed 65
+          backend tests, typecheck and build; the database and full browser
+          suites were not rerun for it.
+        </p>
+        <p>
+          Print styles now suppress browser margin headers and footers while
+          preserving invoice padding. The frontend build passed and the reviewer
+          confirmed the fix after refreshing Chrome's cached page. Long-content
+          pagination checks above remain optional and are not claimed complete.
+          After source changes, rebuild with
+          <code>docker compose up -d --build --wait</code> and refresh the page.
+        </p>
+        <p>
+          Manual status changes have no UI or API and are outside the required
+          scope. New invoices are stored as Draft; Overdue is derived at read
+          time. Seed data supplies Pending and Paid examples.
         </p>
       </div>
       <h2>Existing visual evidence</h2>
@@ -2755,7 +2690,7 @@
         <figure>
           <a href="../docs/screenshots/invoices-desktop.png"
             ><img
-              src="docs/screenshots/invoices-desktop.png"
+              src="../docs/screenshots/invoices-desktop.png"
               alt="Existing invoice register desktop screenshot"
               loading="lazy"
           /></a>
@@ -2766,7 +2701,7 @@
         <figure>
           <a href="../docs/screenshots/detail-desktop.png"
             ><img
-              src="docs/screenshots/detail-desktop.png"
+              src="../docs/screenshots/detail-desktop.png"
               alt="Existing invoice details desktop screenshot"
               loading="lazy"
           /></a>
@@ -2781,9 +2716,10 @@
         <a href="../README.md">README</a> ·
         <a href="../docs/VERIFICATION.md">verification record</a> ·
         <a href="../docs/BOILERPLATES.md">template provenance</a> · The report
-        is updated for the three selected improvements and the latest local
-        checks. A GitHub remote is reachable; publication of the implementation
-        and delivery of the submission remain unverified.
+        includes the logging and printing follow-ups; dated verification results
+        describe their respective baselines. Source availability and
+        administrative delivery are marked complete based on candidate
+        confirmation.
       </footer>
     </main>
     <script>

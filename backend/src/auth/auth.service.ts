@@ -9,7 +9,7 @@ import { UserEntity } from '../users/user.entity';
 import { LoginDto, UserProfileDto } from './auth.dto';
 @Injectable()
 export class AuthService {
-  // Dummy hash to prevent timing attacks
+  // Perform bcrypt work for unknown accounts too, reducing login timing differences.
   private readonly dummyHash = hashSync(randomBytes(32).toString('hex'), 12);
   constructor(
     @InjectRepository(UserEntity)

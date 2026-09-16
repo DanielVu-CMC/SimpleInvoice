@@ -17,7 +17,7 @@ npm start
 
 `npm start` works before installing npm dependencies and preserves an existing `.env`. Docker must be running and the configured ports must be available. It starts services in the background and waits for health checks.
 
-Once images are built, `docker compose up` starts the entire stack. The legacy `docker-compose up` command also works when installed. Configuration must exist before starting; alternatively copy `.env.example` to `.env` and replace the database password in both `DATABASE_PASSWORD` and `DATABASE_URL`, plus `JWT_SECRET` with a random value of at least 32 characters.
+Once images are built, `docker compose up` starts the entire stack. Use the Compose plugin (`docker compose`), which is also required by `npm start`. Configuration must exist before starting; alternatively copy `.env.example` to `.env` and replace the database password in both `DATABASE_PASSWORD` and `DATABASE_URL`, plus `JWT_SECRET` with a random value of at least 32 characters.
 
 | Service        | Default URL / port                  |
 | -------------- | ----------------------------------- |
@@ -42,6 +42,8 @@ docker compose logs backend
 docker compose down
 ```
 
+After changing source code, run `docker compose up -d --build --wait` again; restarting existing containers does not rebuild their bundled code. Refresh the browser after a frontend rebuild. If an older layout or print style persists, perform a hard refresh before reopening print preview.
+
 `docker compose down -v` removes the demo database permanently and is only appropriate when deliberately resetting all local data.
 
 ## Reviewer login
@@ -53,7 +55,7 @@ The public demo credentials supplied by `.env.example` and `npm run setup` are:
 | Email    | `reviewer@example.com`   |
 | Password | `reviewer-demo-password` |
 
-The seed script reads these values exclusively from `SEED_USER_EMAIL` and `SEED_USER_PASSWORD`; there are no hardcoded application credentials. Change them before deploying anywhere. The existing seeded user's password is left unchanged on repeated seeds; changing the environment password does not reset an existing account. This avoids silently altering accounts while restarting the stack.
+The seed script reads these values exclusively from `SEED_USER_EMAIL` and `SEED_USER_PASSWORD`; there are no hardcoded application credentials. These public credentials are intentional for this local-only take-home assessment; use sample data only. The existing seeded user's password is left unchanged on repeated seeds; changing the environment password does not reset an existing account. This avoids silently altering accounts while restarting the stack.
 
 ## Run without Docker
 
@@ -94,7 +96,7 @@ Use the URLs and reviewer credentials above. `API_PROXY_TARGET` configures Vite'
 npm run build
 npm run typecheck
 
-# Backend production start after building
+# Run the compiled backend after building
 npm --prefix backend start
 
 # Apply migrations independently
@@ -128,7 +130,7 @@ backend/src/
     domain/         Decimal calculations and overdue derivation
     dto/            Request validation and Swagger schemas
     infrastructure/ TypeORM entities and parameterized repository queries
-  common/           Exception filter, date validators, error schemas
+  common/           Request logging, exception filter, date validators, error schemas
   config/           Validated environment configuration
   database/         Data source, versioned migration, idempotent seeds
 frontend/src/
@@ -144,7 +146,7 @@ frontend/src/
 - **Dates and statuses:** Dates are valid `YYYY-MM-DD` calendar dates. Due date is validated both server-side and with a database constraint. Today means UTC. Persisted statuses are only Draft, Pending, and Paid; non-Paid invoices with a due date before UTC today return Overdue. That includes overdue Draft invoices, as the specification states. A newly created invoice is always persisted as Draft, even if its derived response status is Overdue. Status filtering applies to this derived status before pagination.
 - **Listing:** Case-insensitive, literal partial search on invoice number or customer name, inclusive `invoiceDate` bounds, three allowed sort columns, ASC/DESC ordering, stable UUID tie-breaking, server-side pagination (default 10, maximum 100), and correct match totals. LIKE wildcard characters are escaped. B-tree indexes support ordering/status/date lookups, and trigram GIN indexes support partial search.
 - **Authentication:** Passwords use bcrypt (12 rounds). JWT access tokens default to 3,600 seconds, configurable via `JWT_EXPIRES_IN`. HS256, issuer, audience, signature, expiry, and user existence are checked. Browser JWT storage is an HttpOnly, SameSite=Strict cookie; `COOKIE_SECURE=true` enables Secure cookies with HTTPS. Tokens are never persisted in browser local/session storage. Login also returns `accessToken` for API tools, as required. All invoice routes and `/auth/me` use a JWT guard; unauthenticated pages redirect to `/login`.
-- **Browser security:** Cookie mutations require `X-Requested-With: SimpleInvoice` and reject untrusted supplied Origins; CORS uses an explicit allowlist. The typed client sets the header automatically. Swagger supplies it as a default. Login is rate-limited to 10 requests/minute; all routes have a 120 requests/minute per-IP limit. Error bodies are consistent and do not expose internal stack traces.
+- **Browser security:** Cookie mutations require `X-Requested-With: SimpleInvoice` and reject untrusted supplied Origins; CORS uses an explicit allowlist. The typed client sets the header automatically. Swagger supplies it as a default. Login is limited to 10 requests/minute; other controller routes default to 120 requests/minute per route and observed client IP. Behind the included Nginx proxy, clients share its IP-based buckets (accepted limitation SEC-002). Error bodies are consistent and do not expose internal stack traces.
 - **UI:** Responsive navigation, searchable/sortable list, all status filters, optional date filters, page-size controls, loading/error/empty states, validated creation, duplicate-number feedback, creation success notification, session-expiry redirects, and a printable detail view. Keyboard focus moves to the main content on page navigation; mobile navigation traps focus, closes with Escape and restores trigger focus. Validation errors are linked to inputs, list updates are announced politely, and reduced-motion preferences are respected. Browser tests exercise keyboard-only flows and axe accessibility checks; tables retain native headers and link navigation.
 - **Configuration:** All secrets and runtime settings come from environment variables. `.env.example` contains public demo values/placeholders; setup generates local secrets without replacing an existing `.env`. Production mode requires `COOKIE_SECURE=true`; use HTTPS and set `CORS_ORIGIN` to the exact deployed frontend origin. Frontend `VITE_*` settings are public build-time settings and require rebuilding when changed.
 
@@ -202,7 +204,7 @@ npm run test:browser
 
 `npm run test:database` creates `simpleinvoice_test` and writes its connection URL into the ignored `.env.test`. Integration tests refuse databases whose names do not end in `_test`, and clear data only in that disposable test database. For non-Docker PostgreSQL, set `TEST_DATABASE_URL` to a separate database ending in `_test` before running `npm run test:e2e`; it takes precedence over `.env.test`.
 
-Backend tests cover calculations, half-cent rounding, precision, overdue boundary conditions, date validation, required inputs, unique invoice constraints (including concurrency), auth/cookies/JWT expiry, error shapes, search, status filtering, sorting, pagination, date bounds, seeding, and Swagger. Frontend tests cover protected navigation, login validation, login failure, logout/expiry, unavailable APIs, listing controls, empty states, creation validation/success, and invoice details. Browser tests exercise actual login, creation/detail, filtering, pagination, logout, and mobile rendering.
+Backend tests cover calculations, half-cent rounding, precision, overdue boundary conditions, date validation, required inputs, unique invoice constraints (including concurrency), auth/cookies/JWT expiry, error shapes, search, status filtering, sorting, pagination, date bounds, seeding, and Swagger. Request-logging tests additionally cover UUID correlation, authentication events, error correlation, and sensitive-data exclusion. Frontend tests cover protected navigation, login validation, login failure, logout/expiry, unavailable APIs, listing controls, empty states, creation validation/success, and invoice details. Browser tests exercise actual login, creation/detail, filtering, pagination, logout, and mobile rendering.
 
 ## Request and authentication logs
 
@@ -225,5 +227,5 @@ Logs omit request/response bodies, query strings, submitted emails, passwords, t
 - Authenticated users share the invoice register as requested (all available invoices). This is a single-workspace app, without tenant isolation or role management.
 - Logout clears the browser cookie; stateless bearer tokens already copied elsewhere remain valid until expiry. There are no refresh tokens or revocation store; expiration requires signing in again. The verified token expiry accompanies the profile, and the client automatically redirects when it expires, including on the creation screen.
 - Search, status, invoice-date bounds, sorting, page size and pagination are stored in validated URL parameters and survive refresh, browser history and detail/back navigation. Monetary values remain exact in backend JSON/storage and are displayed using BigInt formatting with the server's original cents.
-- Printing uses the browser print dialog; it is an extra convenience, not a server PDF endpoint. The backend remains the source of totals for the single item.
-- Production TLS termination, monitoring, backups, and deployment-specific proxy/rate-limit settings require configuration for the target environment. The included Compose environment is for local review.
+- Printing uses the browser print dialog; it is an extra convenience, not a server PDF endpoint. Print styles remove page margins to suppress browser headers/footers and provide invoice padding instead. If the browser still adds a date, URL, title, or page number, disable “Headers and footers” in its print settings. The backend remains the source of totals for the single item.
+- This repository is exclusively a local take-home assessment using sample data, with no production deployment planned. SEC-001–003 are acknowledged without fixes in the [security review](docs/security/SECURITY_REVIEW_2026-09-16.md). Production deployment, external monitoring, and backup infrastructure are outside scope; local request/authentication logging is available as described above.
