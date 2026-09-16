@@ -220,13 +220,10 @@ Logs omit request/response bodies, query strings, submitted emails, passwords, t
 
 ## Scope and limitations
 
-- Editing/deleting invoices, changing their status, recording payments, registration, password resets, and multi-item creation are outside the four-feature assessment scope. Seed data demonstrates Pending/Paid and partially paid invoices.
+- Manual invoice status updates (such as moving Draft to Pending or marking an invoice as Paid) are outside the assessment requirements and are not implemented in the UI or API. New invoices are stored as Draft; Overdue is derived automatically at read time for any non-Paid invoice whose due date has passed. Seed data supplies Pending/Paid examples for displaying and filtering statuses.
+- Editing/deleting invoices, recording payments, registration, password resets, and multi-item creation are outside the four-feature assessment scope. Partially paid invoices are demonstrated through seed data.
 - Authenticated users share the invoice register as requested (all available invoices). This is a single-workspace app, without tenant isolation or role management.
 - Logout clears the browser cookie; stateless bearer tokens already copied elsewhere remain valid until expiry. There are no refresh tokens or revocation store; expiration requires signing in again. The verified token expiry accompanies the profile, and the client automatically redirects when it expires, including on the creation screen.
 - Search, status, invoice-date bounds, sorting, page size and pagination are stored in validated URL parameters and survive refresh, browser history and detail/back navigation. Monetary values remain exact in backend JSON/storage and are displayed using BigInt formatting with the server's original cents.
 - Printing uses the browser print dialog; it is an extra convenience, not a server PDF endpoint. The backend remains the source of totals for the single item.
 - Production TLS termination, monitoring, backups, and deployment-specific proxy/rate-limit settings require configuration for the target environment. The included Compose environment is for local review.
-
-## Submission
-
-The implementation is local and has not been submitted or published. The assessment requires a repository ID/URL and candidate submission email, alongside source code and this README, sent by the candidate to the contacts listed in the assessment document.
